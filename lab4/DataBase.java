@@ -4,7 +4,7 @@ import java.util.Scanner;
 class DataBase {
 
     private static final String CREATE_QUERY =
-            "CREATE TABLE PRODUCTS (ID INT GENERATED ALWAYS AS IDENTITY, ProductName VARCHAR(20) UNIQUE, Price INT)";
+            "CREATE TABLE PRODUCTS (ID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, Prodid INT NOT NULL DEFAULT 3, ProductName VARCHAR(20) UNIQUE, Price INT)";
     private static Connection getDerbyConnection() throws SQLException {
         return DriverManager.getConnection("jdbc:derby:memory:test;create=true");
     }
@@ -126,3 +126,4 @@ class DataBase {
         }
     }
 }
+//String sqlQuery = "DROP TABLE if exists product";
