@@ -1,10 +1,10 @@
 import java.sql.*;
 import java.util.Scanner;
 
-public class DataBase {
+class DataBase {
 
     private static final String CREATE_QUERY =
-            "CREATE TABLE PRODUCTS (ProductName VARCHAR(20) UNIQUE, Price INT)";
+            "CREATE TABLE PRODUCTS (ID INT GENERATED ALWAYS AS IDENTITY, ProductName VARCHAR(20) UNIQUE, Price INT)";
     private static Connection getDerbyConnection() throws SQLException {
         return DriverManager.getConnection("jdbc:derby:memory:test;create=true");
     }
@@ -16,8 +16,8 @@ public class DataBase {
                 ResultSet rs = query.executeQuery();
                 while (rs.next()) {
                     System.out.println(String.format("%s %s",
-                            rs.getString(1),
-                            rs.getString(2)
+                            rs.getString(2),
+                            rs.getString(3)
                     ));
                 }
                 rs.close();
@@ -50,11 +50,12 @@ public class DataBase {
 
    static void addDataToTable(String name, int price){
         try (Connection db = getDerbyConnection()) {
-                String sql = "INSERT INTO Products (ProductName, Price) Values (?, ?)";
-                PreparedStatement preparedStatement = db.prepareStatement(sql);
-                preparedStatement.setString(1, name);
-                preparedStatement.setInt(2, price);
-                int rows = preparedStatement.executeUpdate();
+                  String sql = "INSERT INTO Products (ProductName, Price) Values (?, ?)";
+                  PreparedStatement preparedStatement = db.prepareStatement(sql);
+                  preparedStatement.setString(1, name);
+                  preparedStatement.setInt(2, price);
+                  preparedStatement.executeUpdate();
+                      preparedStatement.close();
         } catch (SQLException e) {
             System.out.println("Database connection failure: "
                     + e.getMessage());
@@ -66,7 +67,7 @@ public class DataBase {
                 String sql = "DELETE FROM Products WHERE ProductName = ?";
                 PreparedStatement preparedStatement = db.prepareStatement(sql);
                 preparedStatement.setString(1, name);
-                int rows = preparedStatement.executeUpdate();
+                preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Database connection failure: "
                     + e.getMessage());
@@ -79,7 +80,7 @@ public class DataBase {
             PreparedStatement preparedStatement = db.prepareStatement(sql);
             preparedStatement.setString(2, name);
             preparedStatement.setInt(1, price);
-            int rows = preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Database connection failure: "
                     + e.getMessage());
@@ -123,10 +124,5 @@ public class DataBase {
             System.out.println("Database connection failure: "
                     + e.getMessage());
         }
-    }
-
-        public static void main(String[] args) {
-        addData();
-        printAllTable();
     }
 }

@@ -11,6 +11,5 @@ public final class App {
         {
             Commands.execute(in.nextLine());
         }
-        DataBase.main(args);
     }
 }
