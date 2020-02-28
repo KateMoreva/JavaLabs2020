@@ -29,10 +29,10 @@ public class DBRequestFormer {
     private static final String DELETE_PRODUCT_REQUEST = "DELETE FROM " + Contract.TABLE_NAME + " WHERE "
             + Contract.TableColoumns.COLUMN_TITLE + " = ?";
 
-    private static final String CREATE_TABLE_IF_NOT_EXIST = "CREATE TABLE IF NOT EXISTS " + Contract.TABLE_NAME + " ("
-            + Contract.TableColoumns.COLUMN_ID + " INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
+    private static final String CREATE_TABLE = "CREATE TABLE " + Contract.TABLE_NAME + " ("
+            + Contract.TableColoumns.COLUMN_ID + " INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, "
             + Contract.TableColoumns.COLUMN_PRODUCT_ID + " INT NOT NULL UNIQUE, "
-            + Contract.TableColoumns.COLUMN_TITLE + " CHAR(50) NOT NULL UNIQUE, "
-            + Contract.TableColoumns.COLUMN_COST + " BIGINT NOT NULL)";
+            + Contract.TableColoumns.COLUMN_TITLE + " VARCHAR(30) NOT NULL UNIQUE, "
+            + Contract.TableColoumns.COLUMN_COST + " INT NOT NULL)";
 
 }
