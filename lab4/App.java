@@ -1,3 +1,5 @@
+import DB.DataBase;
+
 import java.util.Scanner;
 
 public final class App {
