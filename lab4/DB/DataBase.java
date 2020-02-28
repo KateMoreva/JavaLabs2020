@@ -15,7 +15,7 @@ public class DataBase {
     public static void printAllTable(){
         try (Connection db = getDerbyConnection()) {
             try (PreparedStatement query =
-                         db.prepareStatement("SELECT * FROM PRODUCTS")) {
+                         db.prepareStatement(DBRequestFormer.SELECT_ALL)) {
                 ResultSet rs = query.executeQuery();
                 while (rs.next()) {
                     System.out.println(String.format("%s %s",
@@ -49,7 +49,7 @@ public class DataBase {
     public static void addDataToTable(String name, int price){
         try (Connection db = getDerbyConnection()) {
                   String sql = "INSERT INTO Products (ProductName, Price) Values (?, ?)";
-                  PreparedStatement preparedStatement = db.prepareStatement(sql);
+                  PreparedStatement preparedStatement = db.prepareStatement(DBRequestFormer.INSERT_REQUEST);
                   preparedStatement.setString(1, name);
                   preparedStatement.setInt(2, price);
                   preparedStatement.executeUpdate();
@@ -62,8 +62,7 @@ public class DataBase {
 
     public static void deleteDataFromTable(String name){
         try (Connection db = getDerbyConnection()) {
-                String sql = "DELETE FROM Products WHERE ProductName = ?";
-                PreparedStatement preparedStatement = db.prepareStatement(sql);
+                PreparedStatement preparedStatement = db.prepareStatement(DBRequestFormer.DELETE_PRODUCT_REQUEST);
                 preparedStatement.setString(1, name);
                 preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -75,7 +74,7 @@ public class DataBase {
     public static void changeProductPrice(String name, int price){
         try (Connection db = getDerbyConnection()) {
             String sql = "UPDATE Products SET Price = ? WHERE ProductName = ? ";
-            PreparedStatement preparedStatement = db.prepareStatement(sql);
+            PreparedStatement preparedStatement = db.prepareStatement(DBRequestFormer.UPDATE_REQUEST);
             preparedStatement.setString(2, name);
             preparedStatement.setInt(1, price);
             preparedStatement.executeUpdate();

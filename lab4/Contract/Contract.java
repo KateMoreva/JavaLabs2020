@@ -8,10 +8,10 @@ public class Contract {
 
     public static abstract class TableColoumns{
 
-        public static final String COLUMN_ID = "id";
-        public static final String COLUMN_PRODUCT_ID = "prodid";
-        public static final String COLUMN_TITLE = "title";
-        public static final String COLUMN_COST = "cost";
+        public static final String COLUMN_ID = "ID";
+        public static final String COLUMN_PRODUCT_ID = "Prodid";
+        public static final String COLUMN_TITLE = "ProductName";
+        public static final String COLUMN_COST = "Price";
         public static final int COLUMN_ID_INDEX = 0;
         public static final int COLUMN_PRODUCT_ID_INDEX = 1;
         public static final int COLUMN_TITLE_INDEX = 2;
