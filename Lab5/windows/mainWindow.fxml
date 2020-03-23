@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mainBg" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" style="-fx-background-color: #2E3348;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.MainWindowController">
+    <children>
+        <AnchorPane fx:id="outputBG" layoutX="351.0" layoutY="-6.0" prefHeight="404.0" prefWidth="351.0" style="-fx-background-color: #2E3340;">
+         <children>
+            <TableView fx:id="table" layoutX="-1.0" layoutY="41.0" prefHeight="363.0" prefWidth="351.0">
+              <columns>
+                <TableColumn fx:id="productNameColumn" editable="false" prefWidth="173.0" text="Product name" />
+                <TableColumn fx:id="productPriceColumn" editable="false" minWidth="0.0" prefWidth="177.0" text="Product price" />
+              </columns>
+            </TableView>
+            <TextField fx:id="tableNameText" editable="false" layoutX="4.0" layoutY="11.0" prefHeight="26.0" prefWidth="340.0" />
+         </children>
+        </AnchorPane>
+        <Button fx:id="showAllButton" layoutX="251.0" layoutY="94.0" mnemonicParsing="false" text="Show all" />
+        <Button fx:id="addButton" layoutX="276.0" layoutY="198.0" mnemonicParsing="false" text="Add" />
+        <Button fx:id="deleteButton" layoutX="261.0" layoutY="294.0" mnemonicParsing="false" text="Delete" />
+        <Button fx:id="changePriceButton" layoutX="235.0" layoutY="249.0" mnemonicParsing="false" text=" Change price" />
+        <Button fx:id="filterByPriceButton" layoutX="228.0" layoutY="145.0" mnemonicParsing="false" text="filter by price" />
+        <TextField fx:id="nameInputAdd" layoutX="12.0" layoutY="198.0" prefHeight="26.0" prefWidth="130.0" promptText="name" />
+        <TextField fx:id="priceInputAdd" layoutX="160.0" layoutY="198.0" prefHeight="26.0" prefWidth="82.0" promptText="price" />
+        <TextField fx:id="nameInputDelete" layoutX="8.0" layoutY="300.0" prefHeight="26.0" prefWidth="232.0" promptText="name" />
+        <TextField fx:id="nameInputChange" layoutX="9.0" layoutY="250.0" prefHeight="26.0" prefWidth="130.0" promptText="name" />
+        <TextField fx:id="priceInputChange" layoutX="146.0" layoutY="250.0" prefHeight="26.0" prefWidth="82.0" promptText="new price" />
+        <TextField fx:id="priceFromFilterInput" layoutX="10.0" layoutY="146.0" prefHeight="26.0" prefWidth="82.0" promptText="100" />
+        <TextField fx:id="priceToFilterInput" layoutX="127.0" layoutY="146.0" prefHeight="26.0" prefWidth="82.0" promptText="1000" />
+        <Button fx:id="showPriceButton" layoutX="251.0" layoutY="349.0" mnemonicParsing="false" text="Show price" />
+        <TextField fx:id="nameInputShowPrice" layoutX="8.0" layoutY="349.0" prefHeight="26.0" prefWidth="221.0" promptText="name" />
+      <Button fx:id="helpButton" layoutX="10.0" layoutY="94.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="92.0" text="Help" />
+      <TextArea fx:id="infoText" layoutX="6.0" layoutY="8.0" prefHeight="69.0" prefWidth="328.0" wrapText="true" />
+    </children>
+</AnchorPane>
