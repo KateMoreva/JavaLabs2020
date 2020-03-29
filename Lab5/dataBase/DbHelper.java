@@ -23,7 +23,7 @@ public class DbHelper {
             + COLUMN_TITLE + ", "
             + COLUMN_COST + ") VALUES (?, ?)";
 
-    private static final String UPDATE_REQUEST = "UPDATE " + TABLE_NAME + " SET "
+    private static final String UPDATE_REQUEST_CHANGE_PRICE = "UPDATE " + TABLE_NAME + " SET "
             + COLUMN_COST + " = ? WHERE "
             + COLUMN_TITLE + " = ?";
 
@@ -42,18 +42,6 @@ public class DbHelper {
 
     private static Connection getDerbyConnection() throws SQLException{
         return DriverManager.getConnection("jdbc:derby:products;create=true");
-    }
-
-    static void createTable(){
-        try (Connection db = getDerbyConnection()) {
-            Statement dataQuery = db.createStatement();
-
-            dataQuery.execute(CREATE_TABLE);
-        } catch (SQLException e) {
-            System.out.println("Database connection failure: "
-                    + e.getMessage());
-        }
-
     }
 
     public static void addTestDataToTable() throws SQLException{
@@ -76,6 +64,7 @@ public class DbHelper {
 
         }
     }
+
     public static boolean addDataToTable(String name, int price){
         try (Connection db = getDerbyConnection()) {
             PreparedStatement preparedStatement = db.prepareStatement(INSERT_REQUEST);
@@ -125,14 +114,22 @@ public class DbHelper {
 
     public static boolean changeProductPrice(String name, int price){
         try (Connection db = getDerbyConnection()) {
-            PreparedStatement preparedStatement = db.prepareStatement(UPDATE_REQUEST);
-            preparedStatement.setString(2, name);
-            preparedStatement.setInt(1, price);
-            preparedStatement.executeUpdate();
-           return true;
+            PreparedStatement preparedStatement = db.prepareStatement(SELECT_REQUEST_PRICE_BY_NAME);
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Product> tmp = buildProductsRequest(resultSet);
+            if  (!tmp.isEmpty()){
+            preparedStatement = db.prepareStatement(UPDATE_REQUEST_CHANGE_PRICE);
+                preparedStatement.setString(2, name);
+                preparedStatement.setInt(1, price);
+                preparedStatement.executeUpdate();
+                return true;
+            }
         } catch (SQLException e) {
-            return false;
+            System.out.println("Database connection failure: "
+                    + e.getMessage());
         }
+        return false;
     }
 
     public static List<Product> priceByNameSearchInTable(String name){

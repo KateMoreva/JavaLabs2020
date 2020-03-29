@@ -20,7 +20,9 @@ public class MainWindowController {
     private static final String EMPTY_TABLE = "Таблица пуста";
     private static final String ERROR = "Ошибка";
     private static final String SUCCESSFULLY_CHANGED = "Успешно изменено";
-    private static final String PRICE_TO_ERROR = "Введено неверное значение фильтра. Для Вашего удобства значаение было исправлено. Вы можете ввести другое значение, если Вас оно не устроило";
+    private static final String PRICE_TO_ERROR = "Введено неверное значение фильтра." +
+            " Для Вашего удобства значаение было исправлено." +
+            " Вы можете ввести другое значение, если Вас оно не устроило";
 
     private static String ERROR_INPUT_NAME_EMPTY = "Add name";
     private static String ERROR_INPUT_PRICE_EMPTY = "Add price";
@@ -218,7 +220,9 @@ public class MainWindowController {
                 counter = (int) Math.pow(10, counter + 1);
                 priceToFilterInput.setText(String.valueOf(elem * counter));
             }
-            final List<Product> neededProduct = DbHelper.priceSearchInTable(Integer.parseInt(priceFromFilterInput.getText()), Integer.parseInt(priceToFilterInput.getText()));
+            final List<Product> neededProduct = DbHelper.priceSearchInTable(
+                    Integer.parseInt(priceFromFilterInput.getText()),
+                    Integer.parseInt(priceToFilterInput.getText()));
             if (neededProduct == null) {
                 showMessage(EMPTY_TABLE);
             } else {
@@ -237,13 +241,18 @@ public class MainWindowController {
         changePriceButton.setOnAction(actionEvent -> {
             if (nameInputChange.getText().isEmpty()) {
                 showMessage(ERROR_INPUT_NAME_EMPTY);
-            } else if (DbHelper.changeProductPrice(nameInputChange.getText(), Integer.parseInt(priceInputChange.getText()))) {
+            } else if (DbHelper.changeProductPrice(
+                    nameInputChange.getText(),
+                    Integer.parseInt(priceInputChange.getText()))) {
                 showMessage(SUCCESSFULLY_CHANGED);
                 cleanTextFields(nameInputChange);
                 cleanTextFields(priceInputChange);
                 showTableData();
             } else {
                 showMessage(ERROR);
+                cleanTextFields(nameInputChange);
+                cleanTextFields(priceInputChange);
+                showTableData();
             }
         });
 
