@@ -13,48 +13,54 @@ public class DbHelper {
     private static final String COLUMN_PRODUCT_ID = "Prodid";
     private static final String COLUMN_TITLE = "ProductName";
     private static final String COLUMN_COST = "Price";
+    private static final String DERBY_CONNECTION = "jdbc:derby:products;create=true";
 
     private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
             + COLUMN_ID + " INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, "
             + COLUMN_PRODUCT_ID + " INT NOT NULL DEFAULT 3, "
             + COLUMN_TITLE + " VARCHAR(20) NOT NULL UNIQUE, "
             + COLUMN_COST + " INT NOT NULL)";
-    private static final String INSERT_REQUEST = "INSERT INTO " + TABLE_NAME + "("
+    private static final String INSERT = "INSERT INTO " + TABLE_NAME + "("
             + COLUMN_TITLE + ", "
             + COLUMN_COST + ") VALUES (?, ?)";
 
-    private static final String UPDATE_REQUEST_CHANGE_PRICE = "UPDATE " + TABLE_NAME + " SET "
+    private static final String CHANGE_PRICE = "UPDATE " + TABLE_NAME + " SET "
             + COLUMN_COST + " = ? WHERE "
             + COLUMN_TITLE + " = ?";
 
-    private static final String SELECT_REQUEST_PRICE_IN_RANGE = "SELECT * FROM " + TABLE_NAME + " WHERE "
+    private static final String PRICE_IN_RANGE = "SELECT * FROM " + TABLE_NAME + " WHERE "
             + COLUMN_COST + " >= ? AND "
             + COLUMN_COST + " <= ?";
 
-    private static final String SELECT_REQUEST_PRICE_BY_NAME = "SELECT * FROM " + TABLE_NAME + " WHERE "
+    private static final String PRICE_BY_NAME = "SELECT * FROM " + TABLE_NAME + " WHERE "
             + COLUMN_TITLE + " = ?";
 
     private static final String SELECT_ALL = "SELECT * FROM " + TABLE_NAME;
 
-    private static final String DELETE_PRODUCT_REQUEST = "DELETE FROM " + TABLE_NAME + " WHERE "
+    private static final String DELETE_PRODUCT = "DELETE FROM " + TABLE_NAME + " WHERE "
             + COLUMN_TITLE + " = ?";
+    private static final String TABLE_NOT_EXIST = "42X05";
+    private static final String TRUNCATE = "TRUNCATE TABLE" + TABLE_NAME;
+    private static final String TEST_PRODUCT_NAME1 = "asd";
+    private static final int TEST_PRODUCT_PRICE1 = 123;
 
 
-    private static Connection getDerbyConnection() throws SQLException{
-        return DriverManager.getConnection("jdbc:derby:products;create=true");
+    private static Connection getDBConnection() throws SQLException{
+        return DriverManager.getConnection(DERBY_CONNECTION);
     }
 
-    public static void addTestDataToTable() throws SQLException{
-        try (Connection db = getDerbyConnection()) {
+    public static void addTestProduct() throws SQLException{
+        try (Connection db = getDBConnection()) {
             Statement dataQuery = db.createStatement();
-            String sql = "TRUNCATE TABLE Products";
-            dataQuery.execute(sql);
-            String sql2 = "INSERT INTO Products (ProductName, Price) Values ('asd', 123)";
-            dataQuery.execute(sql2);
-
+            dataQuery.execute(TRUNCATE);
+            PreparedStatement preparedStatement = db.prepareStatement(INSERT);
+            preparedStatement.setString(1, TEST_PRODUCT_NAME1);
+            preparedStatement.setInt(2, TEST_PRODUCT_PRICE1);
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
         } catch (SQLException e) {
-            if (e.getSQLState().equals("42X05")) {
-                Connection db = getDerbyConnection();
+            if (e.getSQLState().equals(TABLE_NOT_EXIST)) {
+                Connection db = getDBConnection();
                 Statement dataQuery = db.createStatement();
                 dataQuery.execute(CREATE_TABLE);
             } else {
@@ -65,9 +71,9 @@ public class DbHelper {
         }
     }
 
-    public static boolean addDataToTable(String name, int price){
-        try (Connection db = getDerbyConnection()) {
-            PreparedStatement preparedStatement = db.prepareStatement(INSERT_REQUEST);
+    public static boolean addProduct(String name, int price){
+        try (Connection db = getDBConnection()) {
+            PreparedStatement preparedStatement = db.prepareStatement(INSERT);
             preparedStatement.setString(1, name);
             preparedStatement.setInt(2, price);
             preparedStatement.executeUpdate();
@@ -78,12 +84,12 @@ public class DbHelper {
         }
     }
 
-    public static List<Product> selectAll(){
-        try (Connection db = getDerbyConnection()) {
+    public static List<Product> selectAllProducts(){
+        try (Connection db = getDBConnection()) {
             PreparedStatement query = db.prepareStatement(SELECT_ALL);
             ResultSet resultSet = query.executeQuery();
 
-                return buildProductsRequest(resultSet);
+                return buildProducts(resultSet);
 
         } catch (SQLException e) {
             System.out.println("Database connection failure: "
@@ -93,33 +99,32 @@ public class DbHelper {
         return null;
     }
 
-    public static boolean deleteDataFromTable(String name){
-        try (Connection db = getDerbyConnection()) {
-            PreparedStatement preparedStatement = db.prepareStatement(SELECT_REQUEST_PRICE_BY_NAME);
+    public static boolean deleteProduct(String name){
+        try (Connection db = getDBConnection()) {
+            PreparedStatement preparedStatement = db.prepareStatement(PRICE_BY_NAME);
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                preparedStatement = db.prepareStatement(DELETE_PRODUCT_REQUEST);
+            if (!resultSet.next()) {
+                return false;
+            }
+                preparedStatement = db.prepareStatement(DELETE_PRODUCT);
                 preparedStatement.setString(1, name);
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
-                return true;
-            } else {
-                return false;
-            }
+               return true;
         } catch (SQLException e) {
             return false;
         }
     }
 
     public static boolean changeProductPrice(String name, int price){
-        try (Connection db = getDerbyConnection()) {
-            PreparedStatement preparedStatement = db.prepareStatement(SELECT_REQUEST_PRICE_BY_NAME);
+        try (Connection db = getDBConnection()) {
+            PreparedStatement preparedStatement = db.prepareStatement(PRICE_BY_NAME);
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<Product> tmp = buildProductsRequest(resultSet);
-            if  (!tmp.isEmpty()){
-            preparedStatement = db.prepareStatement(UPDATE_REQUEST_CHANGE_PRICE);
+            List<Product> tmp = buildProducts(resultSet);
+            if (!tmp.isEmpty()) {
+                preparedStatement = db.prepareStatement(CHANGE_PRICE);
                 preparedStatement.setString(2, name);
                 preparedStatement.setInt(1, price);
                 preparedStatement.executeUpdate();
@@ -132,13 +137,12 @@ public class DbHelper {
         return false;
     }
 
-    public static List<Product> priceByNameSearchInTable(String name){
-        try (Connection db = getDerbyConnection()) {
-            PreparedStatement preparedStatement = db.prepareStatement(SELECT_REQUEST_PRICE_BY_NAME);
+    public static List<Product> priceByNameProductSearch(String name){
+        try (Connection db = getDBConnection()) {
+            PreparedStatement preparedStatement = db.prepareStatement(PRICE_BY_NAME);
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return buildProductsRequest(resultSet);
-
+            return buildProducts(resultSet);
         } catch (SQLException e) {
             System.out.println("Database connection failure: "
                     + e.getMessage());
@@ -146,13 +150,13 @@ public class DbHelper {
         return null;
     }
 
-    public static List<Product> priceSearchInTable(int price1, int price2){
-        try (Connection db = getDerbyConnection()) {
-            PreparedStatement preparedStatement = db.prepareStatement(SELECT_REQUEST_PRICE_IN_RANGE);
-            preparedStatement.setInt(1, price1);
-            preparedStatement.setInt(2, price2);
+    public static List<Product> priceRangeProductSearch(int priceFrom, int priceTo){
+        try (Connection db = getDBConnection()) {
+            PreparedStatement preparedStatement = db.prepareStatement(PRICE_IN_RANGE);
+            preparedStatement.setInt(1, priceFrom);
+            preparedStatement.setInt(2, priceTo);
             ResultSet resultSet = preparedStatement.executeQuery();
-            return buildProductsRequest(resultSet);
+            return buildProducts(resultSet);
         } catch (SQLException e) {
             System.out.println("Database connection failure: "
                     + e.getMessage());
@@ -160,7 +164,7 @@ public class DbHelper {
         return null;
     }
 
-    private static List<Product> buildProductsRequest(final ResultSet resultSet) throws SQLException{
+    private static List<Product> buildProducts(final ResultSet resultSet) throws SQLException{
         final List<Product> products = new ArrayList<>();
         while (resultSet.next()) {
              products.add(

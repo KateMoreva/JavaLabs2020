@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sample.dataBase.DbHelper;
 
@@ -15,10 +16,14 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class MainWindowController {
+    private static final String MESSAGE_WINDOW_SOURCE = "/sample/ui/messageWindow.fxml";
+    private static final String PROMPT_TEXT_NAME = "name";
+    private static final String MESSAGE_TITLE = "Database message";
     private static final String SUCCESSFULLY_ADDED = "Успешно добавлено";
     private static final String SUCCESSFULLY_DELETED = "Успешно удалено";
     private static final String EMPTY_TABLE = "Таблица пуста";
-    private static final String ERROR = "Ошибка";
+    private static final String ERROR_NO_DATA = "Данные по этому продукту отсутствуют в таблице";
+    private static final String ERROR_NO_DATA_IN_RANGE = "Данные по продукттам в этом ценовом диапозоне отсутствуют в таблице";
     private static final String SUCCESSFULLY_CHANGED = "Успешно изменено";
     private static final String PRICE_TO_ERROR = "Введено неверное значение фильтра." +
             " Для Вашего удобства значаение было исправлено." +
@@ -134,7 +139,7 @@ public class MainWindowController {
     }
 
     private void showTableData(){
-        final List<Product> productsAll = DbHelper.selectAll();
+        final List<Product> productsAll = DbHelper.selectAllProducts();
         if (productsAll == null) {
             showMessage(EMPTY_TABLE);
         } else {
@@ -149,13 +154,13 @@ public class MainWindowController {
             } else if (nameInputAdd.getText().isEmpty() | priceInputAdd.getText().isEmpty()) {
                 showMessage(ERROR_INPUT_NAME_EMPTY);
 
-            } else if (DbHelper.addDataToTable(nameInputAdd.getText(), Integer.parseInt(priceInputAdd.getText()))) {
+            } else if (DbHelper.addProduct(nameInputAdd.getText(), Integer.parseInt(priceInputAdd.getText()))) {
                 showMessage(SUCCESSFULLY_ADDED);
-                cleanTextFields(nameInputAdd);
-                cleanTextFields(priceInputAdd);
+                cleanTextField(nameInputAdd);
+                cleanTextField(priceInputAdd);
                 showTableData();
             } else {
-                showMessage(ERROR);
+                showMessage(ERROR_NO_DATA);
             }
         });
 
@@ -165,12 +170,12 @@ public class MainWindowController {
         deleteButton.setOnAction(actionEvent -> {
             if (nameInputDelete.getText().isEmpty()) {
                 showMessage(ERROR_INPUT_NAME_EMPTY);
-            } else if (DbHelper.deleteDataFromTable(nameInputDelete.getText())) {
+            } else if (DbHelper.deleteProduct(nameInputDelete.getText())) {
                 showMessage(SUCCESSFULLY_DELETED);
-                cleanTextFields(nameInputDelete);
+                cleanTextField(nameInputDelete);
                 showTableData();
             } else {
-                showMessage(ERROR);
+                showMessage(ERROR_NO_DATA);
             }
         });
 
@@ -181,9 +186,9 @@ public class MainWindowController {
             if (nameInputShowPrice.getText().isEmpty()) {
                 showMessage(ERROR_INPUT_NAME_EMPTY);
             } else {
-                final List<Product> neededProduct = DbHelper.priceByNameSearchInTable(nameInputShowPrice.getText());
-                if (neededProduct == null) {
-                    showMessage(EMPTY_TABLE);
+                final List<Product> neededProduct = DbHelper.priceByNameProductSearch(nameInputShowPrice.getText());
+                if (neededProduct.isEmpty()) {
+                    showMessage(ERROR_NO_DATA);
                 } else {
                     showResults(neededProduct);
                     String tmpNeededProductName = nameInputShowPrice.getText();
@@ -220,11 +225,11 @@ public class MainWindowController {
                 counter = (int) Math.pow(10, counter + 1);
                 priceToFilterInput.setText(String.valueOf(elem * counter));
             }
-            final List<Product> neededProduct = DbHelper.priceSearchInTable(
+            final List<Product> neededProduct = DbHelper.priceRangeProductSearch(
                     Integer.parseInt(priceFromFilterInput.getText()),
                     Integer.parseInt(priceToFilterInput.getText()));
-            if (neededProduct == null) {
-                showMessage(EMPTY_TABLE);
+            if (neededProduct.isEmpty()) {
+                showMessage(ERROR_NO_DATA_IN_RANGE);
             } else {
                 showResults(neededProduct);
                 String tmpPriceFrom = priceFromFilterInput.getText();
@@ -245,13 +250,13 @@ public class MainWindowController {
                     nameInputChange.getText(),
                     Integer.parseInt(priceInputChange.getText()))) {
                 showMessage(SUCCESSFULLY_CHANGED);
-                cleanTextFields(nameInputChange);
-                cleanTextFields(priceInputChange);
+                cleanTextField(nameInputChange);
+                cleanTextField(priceInputChange);
                 showTableData();
             } else {
-                showMessage(ERROR);
-                cleanTextFields(nameInputChange);
-                cleanTextFields(priceInputChange);
+                showMessage(ERROR_NO_DATA);
+                cleanTextField(nameInputChange);
+                cleanTextField(priceInputChange);
                 showTableData();
             }
         });
@@ -266,13 +271,21 @@ public class MainWindowController {
     private void showMessage(String message){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setGraphic(null);
-        alert.setTitle("Database message");
+        alert.setTitle(MESSAGE_TITLE);
         alert.setHeaderText(null);
-        alert.setContentText(message);
+        TextArea mes = new TextArea();
+        mes.setWrapText(true);
+        mes.setText(message);
+        mes.setEditable(false);
+        VBox dialogMes = new VBox();
+        dialogMes.getChildren().add(mes);
+        alert.getDialogPane().setMaxWidth(450);
+        alert.getDialogPane().setMaxHeight(200);
+        alert.getDialogPane().setContent(mes);
         alert.showAndWait();
     }
 
-    private void cleanTextFields(TextField textField){
+    private void cleanTextField(TextField textField){
         textField.clear();
         searchFieldsSetUp();
     }
@@ -286,15 +299,16 @@ public class MainWindowController {
             priceFromFilterInput.setPromptText(INIT_PRICE_FROM);
             priceFromFilterInput.clear();
         }
-        if (!nameInputShowPrice.getPromptText().equals("name"))
-            nameInputShowPrice.setPromptText("name");
+        if (!nameInputShowPrice.getPromptText().equals(PROMPT_TEXT_NAME)) {
+            nameInputShowPrice.setPromptText(PROMPT_TEXT_NAME);
+        }
         nameInputShowPrice.clear();
     }
 
     private void initShowHelpButton(){
         helpButton.setOnAction(actionEvent -> {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/sample/windows/messageWindow.fxml"));
+            loader.setLocation(getClass().getResource(MESSAGE_WINDOW_SOURCE));
             try {
                 loader.load();
             } catch (IOException e) {

@@ -1,6 +1,6 @@
 package sample;
 
-public class Product {
+public final class Product {
     private final int id;
     private final String name;
     private int cost;
@@ -22,5 +22,4 @@ public class Product {
     public int getCost(){
         return cost;
     }
-
 }
