@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sat Apr 11 14:44:02 MSK 2020:
+ Производится загрузка Derby версии The Apache Software Foundation - Apache Derby - 10.15.2.0 - (1873585): экземпляр a816c00e-0171-690d-c47d-000005fb9278
+в каталоге базы данных /home/katerina/IdeaProjects/labbb/products jdk.internal.loader.ClassLoaders$AppClassLoader@2669b199 
+
+java.vendor=Oracle Corporation
+java.runtime.version=11.0.2+9-LTS
+user.dir=/home/katerina/IdeaProjects/labbb
+os.name=Linux
+os.arch=amd64
+os.version=4.15.0-96-generic
+derby.system.home=null
+Запущен загрузчик классов базы данных - derby.database.classpath=''
