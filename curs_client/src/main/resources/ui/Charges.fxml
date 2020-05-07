@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mainBg" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: #2E3348;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="curs.BD.cursBd.ui.ChargesController">
+    <children>
+        <Button fx:id="filterByAmountButton" layoutX="234.0" layoutY="122.0" mnemonicParsing="false" text="filter by amount" />
+        <TextField fx:id="idInputAdd" layoutX="5.0" layoutY="177.0" prefHeight="26.0" prefWidth="123.0" promptText="expense name" />
+        <TextField fx:id="dateInputAdd" layoutX="160.0" layoutY="177.0" prefHeight="26.0" prefWidth="82.0" promptText="date" />
+        <TextField fx:id="priceFromFilterInput" layoutX="5.0" layoutY="123.0" prefHeight="26.0" prefWidth="82.0" promptText="100" />
+        <TextField fx:id="priceToFilterInput" layoutX="128.0" layoutY="123.0" prefHeight="26.0" prefWidth="82.0" promptText="1000" />
+        <Button fx:id="showAllInfoButton" layoutX="225.0" layoutY="335.0" mnemonicParsing="false" text="Show all charges" />
+      <TableView fx:id="table" layoutX="370.0" layoutY="15.0" prefHeight="478.0" prefWidth="422.0">
+         <columns>
+            <TableColumn fx:id="expevseColumn" editable="false" prefWidth="141.0" text="Expense" />
+            <TableColumn fx:id="dateColumn" prefWidth="141.0" text="Date" />
+            <TableColumn fx:id="amountColumn" prefWidth="139.0" text="Amount" />
+         </columns>
+      </TableView>
+      <Button fx:id="showAllButton" layoutX="283.0" layoutY="69.0" mnemonicParsing="false" text="Show all" />
+      <Button fx:id="addButton" layoutX="310.0" layoutY="221.0" mnemonicParsing="false" text="Add" />
+      <Button fx:id="deleteButton1" layoutX="294.0" layoutY="275.0" mnemonicParsing="false" text="Delete" />
+      <TextArea fx:id="infoText" editable="false" layoutX="6.0" layoutY="8.0" prefHeight="42.0" prefWidth="348.0" wrapText="true" />
+      <TextField fx:id="amountInputAdd" layoutX="274.0" layoutY="176.0" prefHeight="26.0" prefWidth="82.0" promptText="amount" />
+      <TextField fx:id="idInputAdd1" layoutX="5.0" layoutY="279.0" prefHeight="26.0" prefWidth="123.0" promptText="expense name" />
+      <TextField fx:id="dateInputAdd1" layoutX="160.0" layoutY="278.0" prefHeight="26.0" prefWidth="82.0" promptText="date" />
+      <TextField fx:id="expenseInputShowAllInfo" layoutX="5.0" layoutY="335.0" prefHeight="26.0" prefWidth="123.0" promptText="expense name" />
+      <Button fx:id="changeAmountButton" layoutX="250.0" layoutY="441.0" mnemonicParsing="false" text="Show amount" />
+      <TextField fx:id="idInputChangeAmount" layoutX="4.0" layoutY="441.0" prefHeight="26.0" prefWidth="123.0" promptText="expense name" />
+      <TextField fx:id="dateInputChangeAmount" layoutX="143.0" layoutY="441.0" prefHeight="26.0" prefWidth="82.0" promptText="date" />
+    </children>
+</AnchorPane>
