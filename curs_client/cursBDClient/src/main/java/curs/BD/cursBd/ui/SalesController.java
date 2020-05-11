@@ -1,11 +1,7 @@
 package curs.BD.cursBd.ui;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import org.springframework.stereotype.Component;
 
@@ -19,13 +15,13 @@ public class SalesController {
     private TableView<?> table;
 
     @FXML
-    private TableColumn<?, ?> warehouseIDColumn;
+    private TableColumn<?, ?> warehouseNameColumn;
 
     @FXML
     private TableColumn<?, ?> saleDateColumn;
 
     @FXML
-    private TableColumn<?, ?> productAmountColumn;
+    private TableColumn<?, ?> amountColumn;
 
     @FXML
     private TableColumn<?, ?> quantityColumn;
@@ -40,28 +36,16 @@ public class SalesController {
     private Button deleteButton;
 
     @FXML
-    private TextField dateInputAdd;
-
-    @FXML
     private TextField quantityInputAdd;
 
     @FXML
     private TextArea infoText;
 
     @FXML
-    private TextField warehouseIDInputAdd;
+    private TextField warehouseNameInputAdd;
 
     @FXML
-    private TextField ddateInputDelete;
-
-    @FXML
-    private TextField quantityInputDelete;
-
-    @FXML
-    private TextField warehouseIDInputDelete;
-
-    @FXML
-    private Button changeQuantityButton;
+    private Button filterButton;
 
     @FXML
     private TextField quantityInputChange;
@@ -70,43 +54,42 @@ public class SalesController {
     private Button showInfoButton;
 
     @FXML
-    private TextField ddateInputShowInfo;
+    private TextField warehouseNameInputShowInfo;
 
     @FXML
-    private TextField warehouseIDInputShowInfo;
+    private DatePicker dateFrom;
 
     @FXML
-    private TextField warehouseIDInputChange;
-
-    @FXML
-    private TextField dateInputChange;
+    private DatePicker dateTo;
 
     @FXML
     private Button filterByDateButton;
 
     @FXML
-    private TextField dateFromFilterInput;
+    private DatePicker dateInputAdd;
 
     @FXML
-    private TextField dateToFilterInput;
+    private TextField hoursInput;
 
     @FXML
-    private Button filterByQuantityButton;
+    private TextField minuteInput;
 
     @FXML
-    private TextField quantityFromFilterInput;
+    private TextField secondsInput;
 
     @FXML
-    private TextField quantityToFilterInput;
+    private DatePicker dateInputChange;
 
     @FXML
-    private Button filterByAmountButton;
+    private TextField hoursInputChange;
 
     @FXML
-    private TextField amountFromFilterInput;
+    private TextField minuteInputChange;
 
     @FXML
-    private TextField amountToFilterInput;
+    private TextField secondsInputChange;
+
+    @FXML
     void initialize(){}
 
 

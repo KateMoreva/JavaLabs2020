@@ -1,11 +1,7 @@
 package curs.BD.cursBd.ui;
 
-import curs.BD.cursBd.CientMessage;
-import curs.BD.cursBd.Cliennt;
 import curs.BD.cursBd.DbHelper;
-import curs.BD.cursBd.GreetingClient;
-import curs.BD.cursBd.model.Product;
-import curs.BD.cursBd.model.ProductManager;
+import curs.BD.cursBd.model.Warehouses;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -44,7 +40,7 @@ public class MainWindowController {
     private AnchorPane outputBG;
 
     @FXML
-    private TableView<Product> table;
+    private TableView<Warehouses> table;
 
     @FXML
     private TableColumn<String, String> productNameColumn;
@@ -148,7 +144,7 @@ public class MainWindowController {
     }
 
     private void showTableData(){
-        final List<Product> productsAll = DbHelper.selectAllProducts();
+        final List<Warehouses> productsAll = DbHelper.selectAllProducts();
             showResults(productsAll);
     }
 
@@ -266,7 +262,7 @@ public class MainWindowController {
 //
 //    }
 
-    private void showResults(final List<Product> productsList){
+    private void showResults(final List<Warehouses> productsList){
         table.getItems().clear();
         table.getItems().addAll(productsList);
     }

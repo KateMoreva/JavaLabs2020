@@ -14,15 +14,11 @@ public class Sales {
     Long id;
     Integer amount;
     Integer quantity;
-
-    @JsonFormat(pattern =  "yyyy-MM-dd HH:mm:ss.SSS", timezone = "Europe/Moscow")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "Europe/Moscow")
     Timestamp saleDate;
-//(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @ManyToOne
-    @JoinColumn(name = "warehouseid", referencedColumnName = "id")
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "warehouseid", referencedColumnName = "id")
-        Warehouses warehousesId;
+    @JoinColumn(name = "warehouse_id", referencedColumnName = "id")
+    Warehouses warehousesId;
 
     public Sales() {
 
@@ -40,7 +36,8 @@ public class Sales {
     }
 
     public Integer getAmount() {
-        return this.warehousesId.getAmount();
+        return this.amount;
+//        return this.warehousesId.getAmount();
     }
 
     public Integer getQuantity() {

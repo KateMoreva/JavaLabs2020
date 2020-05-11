@@ -1,7 +1,7 @@
 package curs.BD.cursBd.ui;
 
-import curs.BD.cursBd.model.Product;
-import curs.BD.cursBd.model.ProductManager;
+import curs.BD.cursBd.model.Warehouses;
+import curs.BD.cursBd.model.WarehousesManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -12,16 +12,6 @@ import java.util.List;
 
 @Component
 public class WarehousesController extends WindowController{
-    private static final String PROMPT_TEXT_NAME = "name";
-    private static final String MESSAGE_TITLE = "Database message";
-    private static final String SUCCESSFULLY_ADDED = "Успешно добавлено";
-    private static final String SUCCESSFULLY_CHANGED = "Успешно изменено";
-    private static String ERROR_INPUT_NAME_EMPTY = "Add name";
-    private static String ERROR_INPUT_PRICE_EMPTY = "Add price";
-    private static String INIT_PRICE_FROM = "10";
-    private static String INIT_PRICE_TO = "1000";
-    private static final String ERROR_NO_DATA = "Данные по этому продукту отсутствуют в таблице";
-
 
     private static final String url ="http:///localhost:5432/testdb/warehouse";
 
@@ -78,10 +68,13 @@ public class WarehousesController extends WindowController{
     private Button changeAmountButton;
 
     @FXML
+    private TextField nameInputChangeAmount;
+
+    @FXML
     private TextField amountInputChangeAmount;
 
     @FXML
-    private TableView<Product> table;
+    private TableView<Warehouses> table;
 
     @FXML
     private TableColumn<String, String> productNameColumn;
@@ -106,46 +99,52 @@ public class WarehousesController extends WindowController{
 
         @FXML
         void initialize(){
-           setInputNumericFieldStyle(amountFromFilterInput);
-            setInputNumericFieldStyle(amountToFilterInput);
-            setInputNumericFieldStyle(quantityFromFilterInput);
-            setInputNumericFieldStyle(quantityToFilterInput);
-
-//                productIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+           searchFieldsSetUp(amountFromFilterInput, amountToFilterInput);
+           searchFieldsSetUp(quantityFromFilterInput, quantityToFilterInput);
+            infoText.setText("Warehouses");
                 productNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
                 productAmountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
                 productQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-
-                infoText.setText("Warehouses");
             initShawAllButton();
             initAddButton();
             initDeleteButton();
-            initShowPriceButton();
-            initChangePriceButton();
+            initShowInfoButton();
+            initChangeQuantityButton();
+            initChangeAmountButton();
+            initAmountFilterButton();
+            initQuantityFilterButton();
 
         }
     private void initShawAllButton(){
         showAllButton.setOnAction(actionEvent -> {
-            showTableData();
+            showAllTableData();
         });
     }
 
-    private void showTableData(){
-        final List<Product> productsAll = ProductManager.showAll();
+    private void showAllTableData(){
+        final List<Warehouses> productsAll = WarehousesManager.showAll();
         showResults(productsAll);
+        cleanTextField(amountFromFilterInput);
+        cleanTextField(amountToFilterInput);
+        cleanTextField(quantityToFilterInput);
+        cleanTextField(quantityFromFilterInput);
     }
 
     private void initAddButton(){
         addButton.setOnAction(actionEvent -> {
-            if (nameInputAdd.getText().isEmpty() | amountInputAdd.getText().isEmpty() | quantityInputAdd.getText().isEmpty()) {
-                showMessage(ERROR_INPUT_PRICE_EMPTY);
+            if (textFieldIsEmpty(nameInputAdd)) {
+                showMessage(ERROR_INPUT_NAME_EMPTY);
+            } else if (textFieldIsEmpty(amountInputAdd)) {
+                showMessage(ERROR_INPUT_AMOUNT_EMPTY);
+            }else if (textFieldIsEmpty(quantityInputAdd)) {
+                showMessage(ERROR_INPUT_QUANTITY_EMPTY);
             } else {
-                ProductManager.add(nameInputAdd.getText(),  Integer.parseInt(quantityInputAdd.getText()), Integer.parseInt(amountInputAdd.getText()));
+                WarehousesManager.add(nameInputAdd.getText(),  Integer.parseInt(quantityInputAdd.getText()), Integer.parseInt(amountInputAdd.getText()));
                 showMessage(SUCCESSFULLY_ADDED);
                 cleanTextField(nameInputAdd);
                 cleanTextField(amountInputAdd);
                 cleanTextField(quantityInputAdd);
-                showTableData();
+                showAllTableData();
             }
         });
     }
@@ -156,64 +155,96 @@ public class WarehousesController extends WindowController{
                 showMessage(ERROR_INPUT_NAME_EMPTY);
             } else
             {
-                ProductManager.delete(nameInputDelete.getText());
-                showTableData();
+                if (WarehousesManager.delete(nameInputDelete.getText())) {
+                    showMessage(SUCCESSFULLY_DELETED);
+
+                }
+                else {
+                    showMessage(ERROR_NO_DATA);
+                }
+                cleanTextField(nameInputDelete);
+                showAllTableData();
             }
         });
     }
+    private void initAmountFilterButton() {
+            filterByAmountButton.setOnAction(actionEvent -> {
+                checkNumericFilterNoInputError(amountFromFilterInput,amountToFilterInput);
+                List<Warehouses> warehouses = WarehousesManager.filterByAmount(Integer.parseInt(amountFromFilterInput.getText()),Integer.parseInt(amountToFilterInput.getText()));
+                showResults(warehouses);
+            });
+    }
+    private void initQuantityFilterButton() {
+        filterByQuantityButton.setOnAction(actionEvent -> {
+            checkNumericFilterNoInputError(quantityFromFilterInput,quantityToFilterInput);
+            List<Warehouses> warehouses = WarehousesManager.filterByQuantity(Integer.parseInt(quantityFromFilterInput.getText()),Integer.parseInt(quantityToFilterInput.getText()));
+            showResults(warehouses);
+        });
+    }
 
-    private void showResults(final List<Product> productsList){
+
+    private void showResults(final List<Warehouses> productsList){
         table.getItems().clear();
         table.getItems().addAll(productsList);
     }
 
-        private void initChangePriceButton(){
+        private void initChangeQuantityButton(){
        changeQuantityButton.setOnAction(actionEvent -> {
             if (nameInputChangeQuantity.getText().isEmpty()) {
                 showMessage(ERROR_INPUT_NAME_EMPTY);
-            } else {
-                ProductManager.update(Integer.parseInt(nameInputChangeQuantity.getText()), Integer.parseInt(quantityInputChangeQuantity.getText()));
-
-
+            } else if  (quantityInputChangeQuantity.getText().isEmpty()) {
+                showMessage(ERROR_INPUT_QUANTITY_EMPTY);
+            }
+            else if (WarehousesManager.updateQuantity(nameInputChangeQuantity.getText(), Integer.parseInt(quantityInputChangeQuantity.getText()))){
                 showMessage(SUCCESSFULLY_CHANGED);
                 cleanTextField(quantityInputChangeQuantity);
                 cleanTextField(nameInputChangeQuantity);
-                showTableData();
+                showAllTableData();
+
+            } else {
+                showMessage(ERROR_NO_DATA);
+                cleanTextField(quantityInputChangeQuantity);
+                cleanTextField(nameInputChangeQuantity);
+                showAllTableData();
             }
-//            } else {
-//                showMessage(ERROR_NO_DATA);
-//                cleanTextField(quantityInputChangeQuantity);
-//                cleanTextField(nameInputChangeQuantity);
-//                showTableData();
-//            }
         });
 
     }
-    private void initShowPriceButton(){
+    private void initChangeAmountButton(){
+        changeAmountButton.setOnAction(actionEvent -> {
+            if (nameInputChangeAmount.getText().isEmpty()) {
+                showMessage(ERROR_INPUT_NAME_EMPTY);
+            } else if  (amountInputChangeAmount.getText().isEmpty()) {
+                showMessage(ERROR_INPUT_AMOUNT_EMPTY);
+            }
+            else if (WarehousesManager.updateAmount(nameInputChangeAmount.getText(), Integer.parseInt(amountInputChangeAmount.getText()))){
+                showMessage(SUCCESSFULLY_CHANGED);
+                cleanTextField(quantityInputChangeQuantity);
+                cleanTextField(nameInputChangeQuantity);
+                showAllTableData();
+            } else {
+                showMessage(ERROR_NO_DATA);
+                cleanTextField(quantityInputChangeQuantity);
+                cleanTextField(nameInputChangeQuantity);
+                showAllTableData();
+            }
+        });
+    }
+
+    private void initShowInfoButton(){
         showInfoButton.setOnAction(actionEvent -> {
             if (nameInputShowInfo.getText().isEmpty()) {
                 showMessage(ERROR_INPUT_NAME_EMPTY);
             }
             else {
-                final List<Product> neededProduct = ProductManager.showByName(nameInputShowInfo.getText());
-               if (neededProduct == null) {
+                final List<Warehouses> neededWarehouses = WarehousesManager.showByName(nameInputShowInfo.getText());
+               if (neededWarehouses.isEmpty()) {
                     showMessage(ERROR_NO_DATA);
                 } else {
-                    showResults(neededProduct);
+                    showResults(neededWarehouses);
                    cleanTextField(nameInputShowInfo);
                 }
             }
-        });
-    }
-    private void initFilterButton() {
-        filterByAmountButton.setOnAction(actionEvent -> {
-            int amountFrom;
-            int amountTo;
-            if ((amountFromFilterInput.getText().isEmpty())||(amountToFilterInput.getText().isEmpty())) {
-                amountFrom = Integer.parseInt(amountToFilterInput.getPromptText());
-                amountTo = Integer.parseInt(amountToFilterInput.getPromptText());
-            }
-
         });
     }
 }

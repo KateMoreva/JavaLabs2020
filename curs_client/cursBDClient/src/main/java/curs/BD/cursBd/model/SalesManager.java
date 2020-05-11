@@ -4,10 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class SalesManager {
@@ -19,37 +16,75 @@ public class SalesManager {
         List<Sales> clproduct = new ArrayList<>();
         if (result != null) {
             for (Map<String,Object> res : result) {
-                LinkedHashMap<String, Object> la = (LinkedHashMap<String, Object>) res.get("warehouseId");
-                Product product = new Product((Integer) la.get("id"),(String) la.get("name"), (Integer) la.get("quantity"), (Integer) la.get("amount"));
-               clproduct.add( new Sales((Integer) res.get("id"), (Integer) res.get("amount"), (Integer) res.get("quantity"), (String) res.get("saleDate"), product));
+                LinkedHashMap<String, Object> la = (LinkedHashMap<String, Object>) res.get("warehousesId");
+                Warehouses warehouses = new Warehouses((Integer) la.get("id"),(String) la.get("name"), (Integer) la.get("quantity"), (Integer) la.get("amount"));
+               clproduct.add( new Sales((Integer) res.get("id"), (Integer) res.get("amount"), (Integer) res.get("quantity"), (String) res.get("saleDate"), warehouses));
             }
-        } else {
-            System.out.println("no dara");
         }
-        System.out.println(clproduct.get(0).getId());
-        System.out.println(clproduct.get(0).getAmount());
-        System.out.println(clproduct.get(0).getQuantity());
-        System.out.println(clproduct.get(0).getSaleDateStr());
-        System.out.println("warehouse");
-        System.out.println(clproduct.get(0).getWarehouseId().getId());
-        System.out.println(clproduct.get(0).getWarehouseId().getName());
-        System.out.println(clproduct.get(0).getWarehouseId().getAmount());
-        System.out.println(clproduct.get(0).getWarehouseId().getQuantity());
-
         return clproduct;
     }
-//    public static boolean add(Integer amount,Integer quantity, Timestamp time, String warehouseName) {
-//        Product item = ProductManager.findByName(expenseItemName);
-//        if (item != null) {
-//            Integer itemId = item.getId();
-//            Charges charges = new Charges(amount,time, item);
-//            RestTemplate restTemplate = new RestTemplate();
-//            Charges res = restTemplate.postForObject(URL_WAREHOUSE + "/new", charges, Charges.class);
-//            return true;
-//        }
-//        return false;
-//    }
+    private static List<Sales> getChargesList (List<Map<String,Object>> result) {
+        List<Sales> charges = new ArrayList<>();
+        List<Sales> clproduct = new ArrayList<>();
+        if (result != null) {
+            for (Map<String,Object> res : result) {
+                LinkedHashMap<String, Object> la = (LinkedHashMap<String, Object>) res.get("warehousesId");
+                Warehouses warehouses = new Warehouses((Integer) la.get("id"),(String) la.get("name"), (Integer) la.get("quantity"), (Integer) la.get("amount"));
+                clproduct.add( new Sales((Integer) res.get("id"), (Integer) res.get("amount"), (Integer) res.get("quantity"), (String) res.get("saleDate"), warehouses));
+            }
+        }
+        return clproduct;
+    }
+    public static List<Sales> find(Integer amount, Integer quantity, Timestamp time, String expenseItemName ){
+        RestTemplate restTemplate = new RestTemplate();
+        String urll = URL_SALES + "/by-all-info/amount/" + amount + "/quantity/" + quantity  + "/date/" + time.toString() + "/item-name/" + expenseItemName;
+        List<Map<String,Object>> result = restTemplate.getForObject(urll, List.class);
+        return getChargesList(result);
+    }
+    public static boolean add(Integer amount, Integer quantity, Timestamp time, String warehouseName) {
+        Warehouses item = WarehousesManager.getByName(warehouseName);
+        if (item != null) {
+            Integer itemId = item.getId();
+            Sales sales = new Sales(amount, quantity, time, item);
+            RestTemplate restTemplate = new RestTemplate();
+            Sales res = restTemplate.postForObject(URL_SALES + "/new", sales, Sales.class);
+            return true;
+        }
+        return false;
+    }
+    public static boolean update(Integer amount, Integer quantity, Timestamp time, String warehouseName, Integer newAmount, Integer newQuantity, Timestamp newTime) {
+        List<Sales> charges = SalesManager.find( amount, quantity, time, warehouseName);
+        Warehouses wareitem = WarehousesManager.getByName(warehouseName);
+        ArrayList<Sales> results = new ArrayList<>();
+        System.out.println(charges);
+        if (!charges.isEmpty()) {
+            for (Sales charge : charges) {
+                Integer id = charge.getId();
+                Map<String, Integer> param = new HashMap<String, Integer>();
+                param.put("id", id);
+                Sales sales = new Sales(newAmount, newQuantity, newTime, wareitem);
+                RestTemplate restTemplate = new RestTemplate();
+                restTemplate.put(URL_SALES + "/" + id.toString(), sales, param);
+                results.add(sales);
+            }
+
+        }
+        return !results.isEmpty();
+    }
+    public static boolean delete(Integer amount, Integer quantity, Timestamp time, String expenseItemName ){
+        List<Sales> charge = SalesManager.find( amount,quantity, time, expenseItemName);
+        if (!charge.isEmpty()) {
+            RestTemplate restTemplate = new RestTemplate();
+            String urll = URL_SALES + "/no-such/amount/" + amount + "/quantity/ " + quantity + "/date/" + time.toString() + "/item-name/" + expenseItemName;
+            restTemplate.delete(urll);
+            return true;
+        }
+        return false;
+    }
     public static void main(String[] args) {
         showAll();
+//        add(23, 5, Timestamp.valueOf("2020-05-11 10:05:15"), "ty");
+       delete(73, 36, Timestamp.valueOf("2020-05-11 10:06:15"), "ty");
+//       update(73, 12, Timestamp.valueOf("2020-05-11 10:06:15"), "ty", 73, 36, Timestamp.valueOf("2020-05-11 10:06:15"));
     }
 }

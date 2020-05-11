@@ -155,7 +155,7 @@ public class ChargesController extends WindowController{
             if (textFieldIsEmpty(nameInput)) {
                 showMessage(ERROR_INPUT_NAME_EMPTY);
             } else if ( textFieldIsEmpty(amountInput)) {
-                if (ChargesManager.update(Integer.parseInt(amountInput.getText()), dateAndTime , nameInput.getText(), Integer.parseInt(amountInput.getText()), newDateAndTime)) {
+                if (ChargesManager.updateOnlyDate(dateAndTime, nameInput.getText(), newDateAndTime)) {
                     showMessage(SUCCESSFULLY_CHANGED);
                 } else {
                     showMessage(ERROR_NO_DATA);

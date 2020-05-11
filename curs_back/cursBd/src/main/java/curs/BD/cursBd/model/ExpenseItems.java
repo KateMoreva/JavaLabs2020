@@ -7,18 +7,14 @@ import java.time.LocalDate;
 @Table(name = "expenseItems")
 public class ExpenseItems {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
     private String name;
 
     public ExpenseItems() {
-
     }
-//    public ExpenseItems(Integer id, String name) {
-//        this
-//    }
 
     public ExpenseItems(String name) {
         this.name = name;

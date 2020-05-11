@@ -47,6 +47,7 @@ public class ChargesController {
 //        }
 //        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
     @GetMapping("/by-expense-item/{id}")
     public ResponseEntity<ArrayList<Charges>> getByExpenseItem(@PathVariable(value = "id") Long id) {
         Iterable<Charges> charges = chargesRepository.findAll();
@@ -61,6 +62,7 @@ public class ChargesController {
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
     @GetMapping("/expense-item-name/{name}")
     public ResponseEntity<ArrayList<Charges>> getByExpenseItemName(@PathVariable(value = "name") String name) {
         Iterable<Charges> charges = chargesRepository.findAll();
@@ -76,7 +78,7 @@ public class ChargesController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/new", method = RequestMethod.POST )
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
     public ResponseEntity<?> create(@RequestBody ChargesBody chargeBody) {
         Charges charge = new Charges();
         if (chargeBody.getExpenseItemsId() != null) {
@@ -89,12 +91,12 @@ public class ChargesController {
                 if (chargeBody.getAmount() != null) {
                     charge.setAmount(chargeBody.getAmount());
                 }
-        }
+            }
             chargesRepository.save(charge);
             return new ResponseEntity<String>(HttpStatus.CREATED);
         }
         return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        }
+    }
 
     @RequestMapping(value = "/date/{date}", method = RequestMethod.GET)
     public ResponseEntity<?> findByDate(@PathVariable(value = "date") Timestamp date) {
@@ -102,16 +104,18 @@ public class ChargesController {
         ArrayList<Charges> chargesToDelete = new ArrayList<>();
         for (Charges charge : charges) {
             if (charge.getChargeDate() != null) {
-            String str1 = charge.getChargeDate().toString();
-            if (str1.equals(date.toString())) {
-                chargesToDelete.add(charge);
-            }}
+                String str1 = charge.getChargeDate().toString();
+                if (str1.equals(date.toString())) {
+                    chargesToDelete.add(charge);
+                }
+            }
         }
-        if (chargesToDelete.isEmpty()){
+        if (chargesToDelete.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(chargesToDelete, HttpStatus.OK);
     }
+
     @RequestMapping(value = "/date-filter/dateFrom/{dateFrom}/dateTo/{dateTo}", method = RequestMethod.GET)
     public ResponseEntity<?> findByDateFilter(@PathVariable(value = "dateFrom") Timestamp dateFrom, @PathVariable(value = "dateTo") Timestamp dateTo) {
         Iterable<Charges> charges = chargesRepository.findAll();
@@ -120,9 +124,10 @@ public class ChargesController {
             if (charge.getChargeDate() != null) {
                 if ((charge.getChargeDate().compareTo(dateFrom) >= 0) && (charge.getChargeDate().compareTo(dateTo) <= 0)) {
                     chargesToDelete.add(charge);
-                }}
+                }
+            }
         }
-        if (chargesToDelete.isEmpty()){
+        if (chargesToDelete.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(chargesToDelete, HttpStatus.OK);
@@ -138,7 +143,7 @@ public class ChargesController {
                 chargesToDelete.add(charge);
             }
         }
-        if (chargesToDelete.isEmpty()){
+        if (chargesToDelete.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(chargesToDelete, HttpStatus.OK);
@@ -147,24 +152,25 @@ public class ChargesController {
     @GetMapping("/item-name/{name}/timeFrom/{timeFrom}/timeTo/{timeTo}")
     public ResponseEntity<?> getByDateAndNameInfo(@PathVariable(value = "name") String name,
                                                   @PathVariable(value = "timeFrom") Timestamp timeFrom,
-                                                  @PathVariable(value = "timeTo") Timestamp timeTo){
-            Iterable<Charges> charges = chargesRepository.findAll();
-            ArrayList<Charges> chargesToDelete = new ArrayList<>();
-            for (Charges charge : charges) {
-                if (charge.getExpenseItemsId().getName().equals(name) &&
-                        (charge.getChargeDate().compareTo(timeFrom) >= 0) && (charge.getChargeDate().compareTo(timeTo) <= 0)) {
-                    chargesToDelete.add(charge);
-                }
+                                                  @PathVariable(value = "timeTo") Timestamp timeTo) {
+        Iterable<Charges> charges = chargesRepository.findAll();
+        ArrayList<Charges> chargesToDelete = new ArrayList<>();
+        for (Charges charge : charges) {
+            if (charge.getExpenseItemsId().getName().equals(name) &&
+                    (charge.getChargeDate().compareTo(timeFrom) >= 0) && (charge.getChargeDate().compareTo(timeTo) <= 0)) {
+                chargesToDelete.add(charge);
             }
-            if (chargesToDelete.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(chargesToDelete, HttpStatus.OK);
         }
-    @RequestMapping(value = "/by-all-info/amount/{amount}/date/{date}/item-name/{name}", method = RequestMethod.GET )
+        if (chargesToDelete.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(chargesToDelete, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/by-all-info/amount/{amount}/date/{date}/item-name/{name}", method = RequestMethod.GET)
     public ResponseEntity<?> findByAllInfo(@PathVariable(value = "amount") Integer amount,
-                                          @PathVariable(value = "date") Timestamp date,
-                                          @PathVariable(value = "name") String name) {
+                                           @PathVariable(value = "date") Timestamp date,
+                                           @PathVariable(value = "name") String name) {
         ArrayList<Charges> chargesToDelete = findElementsByAllInfo(amount, date, name);
 
         if (chargesToDelete.isEmpty()) {
@@ -193,38 +199,39 @@ public class ChargesController {
 //        return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 //    }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT )
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody ChargesBody chargeDetails) {
-   //        chargesRepository.findAllById(chargesIdToUpdate).iterator().hasNext()) {
+        //        chargesRepository.findAllById(chargesIdToUpdate).iterator().hasNext()) {
 //        if (chargeDetails.getExpenseItemsId() != null) {
 //            Optional<ExpenseItems> expenseItem = expenseItemsRepository.findById(chargeDetails.getExpenseItemsId());
 //            if (expenseItem.isPresent()) {
 ////                charge.setExpenseItemsId(expenseItem.get());
-        if   (chargesRepository.findById(id).isPresent()){
-                    Charges excharge = chargesRepository.findById(id).get();
-                        if (chargeDetails.getAmount() != null) {
-                            excharge.setAmount(chargeDetails.getAmount());
-                        }
-                        if (chargeDetails.getChargeDate() != null) {
-                            excharge.setChargeDate(chargeDetails.getChargeDate());
-                        }
+        if (chargesRepository.findById(id).isPresent()) {
+            Charges excharge = chargesRepository.findById(id).get();
+            if (chargeDetails.getAmount() != null) {
+                excharge.setAmount(chargeDetails.getAmount());
+            }
+            if (chargeDetails.getChargeDate() != null) {
+                excharge.setChargeDate(chargeDetails.getChargeDate());
+            }
 
-                        Charges newCharge = chargesRepository.save(excharge);
+            Charges newCharge = chargesRepository.save(excharge);
             return new ResponseEntity<>(chargeDetails, HttpStatus.OK);
-                    }
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                }
-    @RequestMapping(value = "/no-such/amount/{amount}/date/{date}/item-name/{name}", method = RequestMethod.DELETE )
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(value = "/no-such/amount/{amount}/date/{date}/item-name/{name}", method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable(value = "amount") Integer amount,
                                     @PathVariable(value = "date") Timestamp date,
                                     @PathVariable(value = "name") String name) {
 
         ArrayList<Charges> chargesToDelete = findElementsByAllInfo(amount, date, name);
         if (!chargesToDelete.isEmpty()) {
-        for (Charges charges1 : chargesToDelete) {
-            chargesRepository.delete(charges1);
-        }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            for (Charges charges1 : chargesToDelete) {
+                chargesRepository.delete(charges1);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -234,8 +241,7 @@ public class ChargesController {
         ArrayList<Charges> chargesToDelete = new ArrayList<>();
         for (Charges charge : charges) {
             if ((charge.getAmount().equals(amount)) && (charge.getChargeDate().toString().equals(date.toString())) &&
-                    charge.getExpenseItemsId().getName().equals(name))
-            {
+                    charge.getExpenseItemsId().getName().equals(name)) {
                 chargesToDelete.add(charge);
             }
         }

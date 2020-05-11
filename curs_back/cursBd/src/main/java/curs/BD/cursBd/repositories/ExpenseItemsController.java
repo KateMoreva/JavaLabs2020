@@ -44,7 +44,7 @@ public class ExpenseItemsController {
     }
 
     @RequestMapping(value = "/filter/{idFrom}/{idTo}", method = RequestMethod.GET)
-    public ResponseEntity<?> findByFilter(@PathVariable ("idFrom") Long amountFrom, @PathVariable ("idTo") Long amountTo) {
+    public ResponseEntity<?> findByFilter(@PathVariable("idFrom") Long amountFrom, @PathVariable("idTo") Long amountTo) {
         Iterable<ExpenseItems> expenseItems = expenseItemsRepository.findAll();
         ArrayList<ExpenseItems> items = new ArrayList<>();
         for (ExpenseItems pr : expenseItems) {
@@ -70,18 +70,18 @@ public class ExpenseItemsController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/new", method = RequestMethod.POST )
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
     public ResponseEntity<?> create(@RequestBody ExpenseItems expenseItem) {
         expenseItemsRepository.save(expenseItem);
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT )
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody ExpenseItems expenseItemDetails) throws ResourceNotFoundException {
-        if (expenseItemsRepository.findById(id).isPresent()){
+        if (expenseItemsRepository.findById(id).isPresent()) {
             ExpenseItems exitem = expenseItemsRepository.findById(id).get();
             if (exitem.getName() != null) {
-               exitem.setName(expenseItemDetails.getName());
+                exitem.setName(expenseItemDetails.getName());
             }
             ExpenseItems item = expenseItemsRepository.save(exitem);
             return new ResponseEntity<>(expenseItemDetails, HttpStatus.OK);
@@ -89,10 +89,10 @@ public class ExpenseItemsController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/no/{id}", method = RequestMethod.DELETE )
-    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) throws ResourceNotFoundException{
-       ExpenseItems expenseItems = expenseItemsRepository.findById(id)
-                .orElseThrow(()-> new ResourceNotFoundException("no such element"));
+    @RequestMapping(value = "/no/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+        ExpenseItems expenseItems = expenseItemsRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("no such element"));
         Iterable<Charges> charges = chargesRepository.findAll();
         for (Charges charge : charges) {
             if ((charge.getExpenseItemsId().getId().equals(id))) {
@@ -102,8 +102,9 @@ public class ExpenseItemsController {
         expenseItemsRepository.delete(expenseItems);
         return new ResponseEntity<Product>(HttpStatus.NO_CONTENT);
     }
-    @RequestMapping(value = "/no-such/name/{name}", method = RequestMethod.DELETE )
-    public ResponseEntity<?> deleteByName(@PathVariable("name") String name) throws ResourceNotFoundException{
+
+    @RequestMapping(value = "/no-such/name/{name}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteByName(@PathVariable("name") String name) throws ResourceNotFoundException {
         Iterable<ExpenseItems> expenseItems = expenseItemsRepository.findAll();
         for (ExpenseItems expenseItem : expenseItems) {
             if (expenseItem.getName().equals(name)) {

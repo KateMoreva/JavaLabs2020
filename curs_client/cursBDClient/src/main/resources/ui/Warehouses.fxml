@@ -25,7 +25,7 @@
         <TextField fx:id="nameInputShowInfo" layoutX="5.0" layoutY="330.0" prefHeight="26.0" prefWidth="212.0" promptText="name" />
         <TextArea fx:id="infoText" editable="false" layoutX="8.0" layoutY="9.0" prefHeight="42.0" prefWidth="348.0" wrapText="true" />
       <Button fx:id="changeAmountButton" layoutX="231.0" layoutY="436.0" mnemonicParsing="false" text=" Change amount" />
-      <TextField fx:id="amountInputChangeAmount" layoutX="5.0" layoutY="438.0" prefHeight="26.0" prefWidth="123.0" promptText="name" />
+      <TextField fx:id="nameInputChangeAmount" layoutX="5.0" layoutY="438.0" prefHeight="26.0" prefWidth="123.0" promptText="name" />
       <TextField fx:id="amountInputChangeAmount" layoutX="137.0" layoutY="438.0" prefHeight="26.0" prefWidth="82.0" promptText="amount" />
       <TableView fx:id="table" layoutX="370.0" layoutY="15.0" prefHeight="478.0" prefWidth="422.0">
          <columns>

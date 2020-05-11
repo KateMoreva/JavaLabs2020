@@ -38,6 +38,10 @@ public class Charges {
         this.chargeDate = chargeDate;
         this.expenseItems = expenseItem;
     }
+    public Charges(Timestamp chargeDate, ExpenseItems expenseItem) {
+        this.chargeDate = chargeDate;
+        this.expenseItems = expenseItem;
+    }
 //    public Charges(Integer id, Integer amount, Timestamp chargeDate, Integer expenseItem) {
 //        this.id = id;
 //        this.amount = amount;

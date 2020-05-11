@@ -40,9 +40,6 @@ public class WindowController {
 //    protected static final String ERROR_INPUT_FIELD_EMPTY = "Please fill  field";
 
     protected static final String ERROR_INPUT_NAME_EMPTY = "Please fill field name";
-    protected static final String ERROR_INPUT_HOURS_EMPTY = "Please fill field hours";
-    protected static final String ERROR_INPUT_MINUTES_EMPTY = "Please fill field minutes";
-    protected static final String ERROR_INPUT_SECONDS_EMPTY = "Please fill field seconds";
     protected static final String ERROR_INPUT_AMOUNT_EMPTY = "Please fill field amount";
     protected static final String ERROR_INPUT_QUANTITY_EMPTY = "Please fill field quantity";
 
@@ -162,6 +159,8 @@ public class WindowController {
     }
 
     protected static void searchFieldsSetUp(TextField filterFrom, TextField filterTo) {
+       setInputNumericFieldStyle(filterFrom);
+       setInputNumericFieldStyle(filterTo);
         if (!filterFrom.getPromptText().equals(INIT_NUMBER_FILTER_FROM)) {
             filterFrom.setPromptText(INIT_NUMBER_FILTER_FROM);
             filterFrom.clear();

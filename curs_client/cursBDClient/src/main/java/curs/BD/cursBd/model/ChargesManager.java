@@ -144,6 +144,24 @@ public class ChargesManager {
         }
         return !results.isEmpty();
     }
+    public static boolean updateOnlyDate(Timestamp time, String expenseItemName, Timestamp newTime){
+        List<Charges> charges = ChargesManager.findByDateAndName(expenseItemName,time, time);
+        ExpenseItems expenseItems = ExpenseItemsManager.findByName(expenseItemName);
+        ArrayList<Charges> results = new ArrayList<>();
+        if (!charges.isEmpty() && (expenseItems != null)) {
+            for (Charges charge : charges) {
+                Integer id = charge.getId();
+                Map<String, Integer> param = new HashMap<String, Integer>();
+                param.put("id", id);
+                Charges item = new Charges(newTime, expenseItems);
+                RestTemplate restTemplate = new RestTemplate();
+                String urll = URL_WAREHOUSE + "/" + id.toString();
+                restTemplate.put(urll, item, param);
+                results.add(item);
+            }
+        }
+        return !results.isEmpty();
+    }
 
     public static boolean delete(Integer amount,Timestamp time, String expenseItemName ){
         List<Charges> charge = ChargesManager.find( amount, time, expenseItemName);

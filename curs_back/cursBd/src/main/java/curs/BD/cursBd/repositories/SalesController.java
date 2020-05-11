@@ -24,19 +24,6 @@ public class SalesController {
         this.salesRepository = salesRepository;
         this.warehousesRepository = warehousesRepository;
     }
-//    private ResponseEntity<?> find(Boolean condition) {
-//        Iterable<Sales> sales = salesRepository.findAll();
-//        ArrayList<Sales> salesArrayList = new ArrayList<>();
-//        for (Sales sale : sales) {
-//            if (condition) {
-//                salesArrayList.add(sale);
-//            }
-//        }
-//        if (salesArrayList.isEmpty()){
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//        return new ResponseEntity<>(salesArrayList, HttpStatus.OK);
-//    }
 
     @GetMapping("/all-items")
     public ResponseEntity<?> getAll() {
@@ -51,7 +38,7 @@ public class SalesController {
         Optional<Sales> sale = salesRepository.findById(id);
         return sale.isEmpty() ?
                 new ResponseEntity<>(HttpStatus.NO_CONTENT) :
-        new ResponseEntity<>(sale, HttpStatus.OK);
+                new ResponseEntity<>(sale, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/by-warehouse/{id}", method = RequestMethod.GET)
@@ -63,11 +50,12 @@ public class SalesController {
                 salesArrayList.add(sale);
             }
         }
-        if (!salesArrayList.isEmpty()){
+        if (!salesArrayList.isEmpty()) {
             return new ResponseEntity<>(salesArrayList, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
     @RequestMapping(value = "/by-warehouse-name/{name}", method = RequestMethod.GET)
     public ResponseEntity<?> findWarehouseByName(@PathVariable(value = "name") String name) {
         Iterable<Sales> sales = salesRepository.findAll();
@@ -77,7 +65,7 @@ public class SalesController {
                 salesArrayList.add(sale);
             }
         }
-        if (!salesArrayList.isEmpty()){
+        if (!salesArrayList.isEmpty()) {
             return new ResponseEntity<>(salesArrayList, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -93,13 +81,15 @@ public class SalesController {
                 String str1 = sale.getSaleDate().toString();
                 if (str1.equals(date.toString())) {
                     salesArrayList.add(sale);
-                }}
+                }
+            }
         }
-        if (salesArrayList.isEmpty()){
+        if (salesArrayList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(salesArrayList, HttpStatus.OK);
     }
+
     @RequestMapping(value = "/date-filter/dateFrom/{dateFrom}/dateTo/{dateTo}", method = RequestMethod.GET)
     public ResponseEntity<?> findByDateFilter(@PathVariable(value = "dateFrom") Timestamp dateFrom, @PathVariable(value = "dateTo") Timestamp dateTo) {
         Iterable<Sales> charges = salesRepository.findAll();
@@ -108,9 +98,10 @@ public class SalesController {
             if (sale.getSaleDate() != null) {
                 if ((sale.getSaleDate().compareTo(dateFrom) >= 0) && (sale.getSaleDate().compareTo(dateTo) <= 0)) {
                     salesArrayList.add(sale);
-                }}
+                }
+            }
         }
-        if (salesArrayList.isEmpty()){
+        if (salesArrayList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(salesArrayList, HttpStatus.OK);
@@ -125,7 +116,7 @@ public class SalesController {
                 salesArrayList.add(sale);
             }
         }
-        if (salesArrayList.isEmpty()){
+        if (salesArrayList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(salesArrayList, HttpStatus.OK);
@@ -134,7 +125,7 @@ public class SalesController {
     @GetMapping("/item-name/{name}/timeFrom/{timeFrom}/timeTo/{timeTo}")
     public ResponseEntity<?> getByDateAndNameInfo(@PathVariable(value = "name") String name,
                                                   @PathVariable(value = "timeFrom") Timestamp timeFrom,
-                                                  @PathVariable(value = "timeTo") Timestamp timeTo){
+                                                  @PathVariable(value = "timeTo") Timestamp timeTo) {
         Iterable<Sales> sales = salesRepository.findAll();
         ArrayList<Sales> salesArrayList = new ArrayList<>();
         for (Sales sale : sales) {
@@ -149,7 +140,7 @@ public class SalesController {
         return new ResponseEntity<>(salesArrayList, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/by-all-info/amount/{amount}/quantity/{quantity}/date/{date}/item-name/{name}", method = RequestMethod.GET )
+    @RequestMapping(value = "/by-all-info/amount/{amount}/quantity/{quantity}/date/{date}/item-name/{name}", method = RequestMethod.GET)
     public ResponseEntity<?> findByAllInfo(@PathVariable(value = "amount") Integer amount,
                                            @PathVariable(value = "quantity") Integer quantity,
                                            @PathVariable(value = "date") Timestamp date,
@@ -157,9 +148,8 @@ public class SalesController {
         Iterable<Sales> sales = salesRepository.findAll();
         ArrayList<Sales> salesArrayList = new ArrayList<>();
         for (Sales sale : sales) {
-            if ((sale.getAmount().equals(amount)) && (sale.getQuantity().equals(quantity))&& (sale.getSaleDate().toString().equals(date.toString())) &&
-                    sale.getWarehousesId().getName().equals(name))
-            {
+            if ((sale.getAmount().equals(amount)) && (sale.getQuantity().equals(quantity)) && (sale.getSaleDate().toString().equals(date.toString())) &&
+                    sale.getWarehousesId().getName().equals(name)) {
                 salesArrayList.add(sale);
             }
         }
@@ -169,26 +159,93 @@ public class SalesController {
         return new ResponseEntity<>(salesArrayList, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/sales", method = RequestMethod.POST )
-    public ResponseEntity<?> create(@RequestBody SalesBody salesbody) {
-       Sales sale = new Sales();
-       if (salesbody.getWarehouseId() != null) {
-           Optional<Warehouses> warehouse = warehousesRepository.findById(salesbody.getWarehouseId());
-           if (warehouse.isPresent()) {
-               sale.setWarehousesId(warehouse.get());
-               if (salesbody.getSaleDate() != null) {
-                   sale.setSaleDate(salesbody.getSaleDate());
-               }
-               if (salesbody.getQuantity() != null) {
-                   sale.setQuantity(salesbody.getQuantity());
-               }
-               if (salesbody.getAmount() != null) {
-                   sale.setAmount(salesbody.getAmount());
-               }
-           }
-           salesRepository.save(sale);
-           return new ResponseEntity<>(HttpStatus.CREATED);
-       }
-        return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+    @RequestMapping(value = "/new", method = RequestMethod.POST)
+    public ResponseEntity<?> create(@RequestBody Sales salesbody) {
+        Sales sale = new Sales();
+        sale.setWarehousesId(salesbody.getWarehousesId());
+        Warehouses warehouses = salesbody.getWarehousesId();
+        if ((warehouses.getQuantity() != null) && (salesbody.getQuantity() != null)) {
+            Integer prevQuantity = salesbody.getWarehousesId().getQuantity();
+            Integer delta = salesbody.getQuantity();
+            Integer newQuantity = prevQuantity - delta;
+            warehouses.setQuantity(newQuantity);
+            warehousesRepository.save(sale.getWarehousesId());
+            sale.setQuantity(salesbody.getQuantity());
+
+        }
+        if (salesbody.getAmount() != null) {
+            sale.setAmount(salesbody.getWarehousesId().getAmount());
+        }
+        if (salesbody.getSaleDate() != null) {
+            sale.setSaleDate(salesbody.getSaleDate());
+        }
+        salesRepository.save(sale);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Sales chargeDetails) {
+        if (salesRepository.findById(id).isPresent()) {
+            Warehouses warehouses = chargeDetails.getWarehousesId();
+            Sales excharge = salesRepository.findById(id).get();
+            if ((warehouses.getQuantity() != null) && (chargeDetails.getQuantity() != null)) {
+                Integer predelta = excharge.getQuantity();
+                Integer prevQuantity = warehouses.getQuantity();
+                Integer delta = chargeDetails.getQuantity();
+                Integer newdel = delta - predelta;
+                Integer newQuantity = prevQuantity - newdel;
+                warehouses.setQuantity(newQuantity);
+                warehousesRepository.save(warehouses);
+                excharge.setQuantity(chargeDetails.getQuantity());
+
+            }
+            if (chargeDetails.getAmount() != null) {
+                excharge.setAmount(chargeDetails.getAmount());
+            }
+            if (chargeDetails.getSaleDate() != null) {
+                excharge.setSaleDate(chargeDetails.getSaleDate());
+            }
+
+            Sales newCharge = salesRepository.save(excharge);
+            return new ResponseEntity<>(chargeDetails, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(value = "/no-such/amount/{amount}/quantity/{quantity}/date/{date}/item-name/{name}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> delete(@PathVariable(value = "amount") Integer amount,
+                                    @PathVariable(value = "quantity") Integer quantity,
+                                    @PathVariable(value = "date") Timestamp date,
+                                    @PathVariable(value = "name") String name) {
+
+        ArrayList<Sales> chargesToDelete = findElementsByAllInfo(amount, quantity, date, name);
+        if (!chargesToDelete.isEmpty()) {
+            for (Sales charges1 : chargesToDelete) {
+                Warehouses warehouses = charges1.getWarehousesId();
+                Integer prevQuantity = charges1.getWarehousesId().getQuantity();
+                Integer delta = charges1.getQuantity();
+                Integer newQuantity = prevQuantity + delta;
+                warehouses.setQuantity(newQuantity);
+                warehousesRepository.save(warehouses);
+                salesRepository.delete(charges1);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    private ArrayList<Sales> findElementsByAllInfo(@PathVariable("amount") Integer amount, @PathVariable("quantity") Integer quantity, @PathVariable("date") Timestamp date, @PathVariable("name") String name) {
+        Iterable<Sales> charges = salesRepository.findAll();
+        ArrayList<Sales> chargesToDelete = new ArrayList<>();
+        for (Sales charge : charges) {
+            if ((charge.getAmount().equals(amount)) && (charge.getQuantity().equals(quantity)) && (charge.getSaleDate().toString().equals(date.toString())) &&
+                    charge.getWarehousesId().getName().equals(name)) {
+                chargesToDelete.add(charge);
+            }
+        }
+        return chargesToDelete;
+    }
+
 }

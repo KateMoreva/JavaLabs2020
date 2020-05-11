@@ -1,11 +1,6 @@
 package curs.BD.cursBd.model;
 
-import org.springframework.data.relational.core.sql.In;
-
-import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Set;
 
 public class Sales {
     Integer id;
@@ -13,25 +8,25 @@ public class Sales {
     Integer quantity;
     Timestamp saleDate;
     String saleDateStr;
-    Product warehouseId;
+    Warehouses warehousesId;
 
     public Sales() {
 
     }
 
-    public Sales(Integer id, Integer amount, Integer quantity, String saleDateStr, Product warehouseId) {
+    public Sales(Integer id, Integer amount, Integer quantity, String saleDateStr, Warehouses warehousesId) {
         this.id = id;
         this.amount = amount;
         this.quantity = quantity;
         this.saleDateStr = saleDateStr;
-        this.warehouseId = warehouseId;
+        this.warehousesId = warehousesId;
     }
-    public Sales(Integer id, Integer amount, Integer quantity, Timestamp saleDate, Product warehouseId) {
+    public Sales(Integer id, Integer amount, Integer quantity, Timestamp saleDate, Warehouses warehousesId) {
         this.id = id;
         this.amount = amount;
         this.quantity = quantity;
         this.saleDate = saleDate;
-        this.warehouseId = warehouseId;
+        this.warehousesId = warehousesId;
     }
     public Sales(Integer id, Integer amount, Integer quantity, String saleDateStr) {
         this.id = id;
@@ -39,17 +34,17 @@ public class Sales {
         this.quantity = quantity;
         this.saleDateStr = saleDateStr;
     }
-    public Sales(Integer amount, Integer quantity, String saleDateStr, Product warehouseId) {
+    public Sales(Integer amount, Integer quantity, String saleDateStr, Warehouses warehousesId) {
         this.amount = amount;
         this.quantity = quantity;
         this.saleDateStr = saleDateStr;
-        this.warehouseId = warehouseId;
+        this.warehousesId = warehousesId;
     }
-    public Sales(Integer amount, Integer quantity, Timestamp saleDate, Product warehouseId) {
+    public Sales(Integer amount, Integer quantity, Timestamp saleDate, Warehouses warehousesId) {
         this.amount = amount;
         this.quantity = quantity;
         this.saleDate = saleDate;
-        this.warehouseId = warehouseId;
+        this.warehousesId = warehousesId;
     }
 
     public Integer getId() {
@@ -89,10 +84,10 @@ public class Sales {
         this.saleDateStr = date;
     }
 
-    public Product getWarehouseId() {
-        return this.warehouseId;
+    public Warehouses getWarehousesId() {
+        return this.warehousesId;
     }
-    public void setWarehouseId(Product warehouseId) {
-        this.warehouseId = warehouseId;
+    public void setWarehousesId(Warehouses warehousesId) {
+        this.warehousesId = warehousesId;
     }
 }
