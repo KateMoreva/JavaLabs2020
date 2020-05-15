@@ -6,6 +6,8 @@ import org.springframework.web.client.RestTemplate;
 import java.sql.Timestamp;
 import java.util.*;
 
+import static java.util.Collections.EMPTY_LIST;
+
 @Component
 public class SalesManager {
     static final String URL_SALES = "http://localhost:8080/sales";
@@ -35,34 +37,44 @@ public class SalesManager {
         }
         return clproduct;
     }
-    public static List<Sales> find(Integer amount, Integer quantity, Timestamp time, String expenseItemName ){
-        RestTemplate restTemplate = new RestTemplate();
-        String urll = URL_SALES + "/by-all-info/amount/" + amount + "/quantity/" + quantity  + "/date/" + time.toString() + "/item-name/" + expenseItemName;
-        List<Map<String,Object>> result = restTemplate.getForObject(urll, List.class);
-        return getChargesList(result);
+    public static List<Sales> find(Integer quantity, Timestamp time, String warehouseName ){
+        Warehouses item = WarehousesManager.getByName(warehouseName);
+        if (item != null) {
+            Integer amount = item.getAmount();
+            RestTemplate restTemplate = new RestTemplate();
+            String urll = URL_SALES + "/by-all-info/amount/" + amount + "/quantity/" + quantity + "/date/" + time.toString() + "/item-name/" + warehouseName;
+            List<Map<String, Object>> result = restTemplate.getForObject(urll, List.class);
+            return getChargesList(result);
+        }
+        return EMPTY_LIST;
     }
-    public static boolean add(Integer amount, Integer quantity, Timestamp time, String warehouseName) {
+    public static boolean add(Integer quantity, Timestamp time, String warehouseName) {
         Warehouses item = WarehousesManager.getByName(warehouseName);
         if (item != null) {
             Integer itemId = item.getId();
-            Sales sales = new Sales(amount, quantity, time, item);
+            Sales sales = new Sales(quantity, time, item);
             RestTemplate restTemplate = new RestTemplate();
             Sales res = restTemplate.postForObject(URL_SALES + "/new", sales, Sales.class);
             return true;
         }
         return false;
     }
-    public static boolean update(Integer amount, Integer quantity, Timestamp time, String warehouseName, Integer newAmount, Integer newQuantity, Timestamp newTime) {
-        List<Sales> charges = SalesManager.find( amount, quantity, time, warehouseName);
+    public static List<Sales> filterByDate(Timestamp timeFrom, Timestamp timeTo) {
+        RestTemplate restTemplate = new RestTemplate();
+        String urll = URL_SALES + "/date-filter/dateFrom/" + timeFrom + "/dateTo/" + timeTo;
+        List<Map<String, Object>> result = restTemplate.getForObject(urll, List.class);
+        return getChargesList(result);
+    }
+    public static boolean update(Integer quantity, Timestamp time, String warehouseName, Integer newQuantity, Timestamp newTime) {
+        List<Sales> charges = SalesManager.find(quantity, time, warehouseName);
         Warehouses wareitem = WarehousesManager.getByName(warehouseName);
         ArrayList<Sales> results = new ArrayList<>();
-        System.out.println(charges);
         if (!charges.isEmpty()) {
             for (Sales charge : charges) {
                 Integer id = charge.getId();
                 Map<String, Integer> param = new HashMap<String, Integer>();
                 param.put("id", id);
-                Sales sales = new Sales(newAmount, newQuantity, newTime, wareitem);
+                Sales sales = new Sales(newQuantity, newTime, wareitem);
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.put(URL_SALES + "/" + id.toString(), sales, param);
                 results.add(sales);
@@ -71,20 +83,48 @@ public class SalesManager {
         }
         return !results.isEmpty();
     }
-    public static boolean delete(Integer amount, Integer quantity, Timestamp time, String expenseItemName ){
-        List<Sales> charge = SalesManager.find( amount,quantity, time, expenseItemName);
+//    public static boolean updateOnlyDate(Timestamp time, String expenseItemName, Timestamp newTime){
+//        List<Sales> sales = SalesManager.findByDateAndName(expenseItemName,time, time);
+//        ExpenseItems expenseItems = ExpenseItemsManager.findByName(expenseItemName);
+//        ArrayList<Charges> results = new ArrayList<>();
+//        if (!charges.isEmpty() && (expenseItems != null)) {
+//            for (Charges charge : charges) {
+//                Integer id = charge.getId();
+//                Map<String, Integer> param = new HashMap<String, Integer>();
+//                param.put("id", id);
+//                Charges item = new Charges(newTime, expenseItems);
+//                RestTemplate restTemplate = new RestTemplate();
+//                String urll = URL_WAREHOUSE + "/" + id.toString();
+//                restTemplate.put(urll, item, param);
+//                results.add(item);
+//            }
+//        }
+//        return !results.isEmpty();
+//    }
+    public static List<Sales> findByWarehouseName(String name) {
+        RestTemplate restTemplate = new RestTemplate();
+        String urll = URL_SALES + "/by-warehouse-name/" + name;
+        List<Map<String, Object>> result = restTemplate.getForObject(urll,List.class);
+        return getChargesList(result);
+    }
+    public static boolean delete(Integer quantity, Timestamp time, String expenseItemName ){
+        List<Sales> charge = SalesManager.find(quantity, time, expenseItemName);
         if (!charge.isEmpty()) {
-            RestTemplate restTemplate = new RestTemplate();
-            String urll = URL_SALES + "/no-such/amount/" + amount + "/quantity/ " + quantity + "/date/" + time.toString() + "/item-name/" + expenseItemName;
-            restTemplate.delete(urll);
+            for (Sales sale : charge) {
+                Integer amount = sale.getAmount();
+                RestTemplate restTemplate = new RestTemplate();
+                String urll = URL_SALES + "/no-such/amount/" + amount + "/quantity/ " + quantity + "/date/" + time.toString() + "/item-name/" + expenseItemName;
+                restTemplate.delete(urll);
+            }
             return true;
         }
         return false;
     }
     public static void main(String[] args) {
-        showAll();
-//        add(23, 5, Timestamp.valueOf("2020-05-11 10:05:15"), "ty");
-       delete(73, 36, Timestamp.valueOf("2020-05-11 10:06:15"), "ty");
+        System.out.println(showAll());
+//        add( 5, Timestamp.valueOf("2020-05-11 10:05:15"), "ty");
+//       delete(73, 36, Timestamp.valueOf("2020-05-11 10:06:15"), "ty");
 //       update(73, 12, Timestamp.valueOf("2020-05-11 10:06:15"), "ty", 73, 36, Timestamp.valueOf("2020-05-11 10:06:15"));
+        System.out.println(filterByDate(Timestamp.valueOf("2020-05-11 10:05:15"), Timestamp.valueOf("2020-05-11 10:05:15")));
     }
 }

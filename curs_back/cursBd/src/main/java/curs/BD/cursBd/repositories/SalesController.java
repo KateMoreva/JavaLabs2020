@@ -173,7 +173,7 @@ public class SalesController {
             sale.setQuantity(salesbody.getQuantity());
 
         }
-        if (salesbody.getAmount() != null) {
+        if (salesbody.getWarehousesId().getAmount() != null) {
             sale.setAmount(salesbody.getWarehousesId().getAmount());
         }
         if (salesbody.getSaleDate() != null) {
@@ -183,6 +183,63 @@ public class SalesController {
         return new ResponseEntity<>(HttpStatus.CREATED);
 
     }
+//    @RequestMapping(value = "/new", method = RequestMethod.POST)
+//    public ResponseEntity<?> create(@RequestBody SalesBody salesbody) {
+//        Sales sale = new Sales();
+//        if (salesbody.getWarehouseId() != null) {
+//            Optional<Warehouses> warehouses = warehousesRepository.findById(salesbody.getWarehouseId());
+//
+//            if ((warehouses.isPresent()) && (salesbody.getQuantity() != null)) {
+//                        sale.setWarehousesId(warehouses.get());
+//                Warehouses warehouse = sale.getWarehousesId();
+//                        Integer prevQuantity = sale.getWarehousesId().getQuantity();
+//                Integer delta = salesbody.getQuantity();
+//                Integer newQuantity = prevQuantity - delta;
+//                warehouse.setQuantity(newQuantity);
+//                warehousesRepository.save(sale.getWarehousesId());
+//                sale.setQuantity(salesbody.getQuantity());
+//
+//            }
+//            if (salesbody.getAmount() != null) {
+//                sale.setAmount(sale.getWarehousesId().getAmount());
+//            }
+//            if (salesbody.getSaleDate() != null) {
+//                sale.setSaleDate(salesbody.getSaleDate());
+//            }
+//            salesRepository.save(sale);
+//            return new ResponseEntity<>(HttpStatus.CREATED);
+//        }
+//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//
+//    }
+
+//    @RequestMapping(value = "/new", method = RequestMethod.POST)
+//    public ResponseEntity<?> create(@RequestBody Sales salesbody) {
+//        Sales sale = new Sales();
+//        if (salesbody.getWarehousesId() != null) {
+//            sale.setWarehousesId(salesbody.getWarehousesId());
+//            Warehouses warehouses = salesbody.getWarehousesId();
+//            if ((warehouses.getQuantity() != null) && (salesbody.getQuantity() != null)) {
+//                Integer prevQuantity = salesbody.getWarehousesId().getQuantity();
+//                Integer delta = salesbody.getQuantity();
+//                Integer newQuantity = prevQuantity - delta;
+//                warehouses.setQuantity(newQuantity);
+//                warehousesRepository.save(sale.getWarehousesId());
+//                sale.setQuantity(salesbody.getQuantity());
+//
+//            }
+//            if (salesbody.getAmount() != null) {
+//                sale.setAmount(salesbody.getWarehousesId().getAmount());
+//            }
+//            if (salesbody.getSaleDate() != null) {
+//                sale.setSaleDate(salesbody.getSaleDate());
+//            }
+//            salesRepository.save(sale);
+//            return new ResponseEntity<>(HttpStatus.CREATED);
+//        }
+//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//
+//    }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Sales chargeDetails) {

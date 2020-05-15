@@ -1,30 +1,37 @@
 package curs.BD.cursBd.ui;
 
+import curs.BD.cursBd.model.ChargesManager;
+import curs.BD.cursBd.model.Sales;
+import curs.BD.cursBd.model.SalesManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 @Component
-public class SalesController {
+public class SalesController extends  WindowController{
 
     @FXML
     private AnchorPane mainBg;
 
     @FXML
-    private TableView<?> table;
+    private TableView<Sales> table;
 
     @FXML
-    private TableColumn<?, ?> warehouseNameColumn;
+    private TableColumn<String, String> warehouseNameColumn;
 
     @FXML
-    private TableColumn<?, ?> saleDateColumn;
+    private TableColumn<String, String> saleDateColumn;
 
     @FXML
-    private TableColumn<?, ?> amountColumn;
+    private TableColumn<String, Integer> amountColumn;
 
     @FXML
-    private TableColumn<?, ?> quantityColumn;
+    private TableColumn<String, Integer> quantityColumn;
 
     @FXML
     private Button showAllButton;
@@ -45,7 +52,7 @@ public class SalesController {
     private TextField warehouseNameInputAdd;
 
     @FXML
-    private Button filterButton;
+    private Button changeButton;
 
     @FXML
     private TextField quantityInputChange;
@@ -90,7 +97,141 @@ public class SalesController {
     private TextField secondsInputChange;
 
     @FXML
-    void initialize(){}
+    void initialize(){
+        initFilterButton();
+        setDatesInputFieldsStyle();
+        setTimeInputFieldsStyle();
+        infoText.setText("Sales");
+        setColumnsValuesFactory();
+        initShowAllButton();
+        initAddButton();
+        initDeleteButton();
+        initChangeButton();
+        initShowButton();
+
+    }
+    private void setColumnsValuesFactory() {
+        amountColumn.setCellValueFactory(new PropertyValueFactory<>("amount"));
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        warehouseNameColumn.setCellValueFactory(new PropertyValueFactory<>("warehousesName"));
+        saleDateColumn.setCellValueFactory(new PropertyValueFactory<>("saleDateStr"));
+         }
+    private void setTimeInputFieldsStyle() {
+        setInputTimeFieldsStyle(hoursInput, minuteInput, secondsInput);
+        setInputTimeFieldsStyle(hoursInputChange, minuteInputChange, secondsInputChange);
+    }
+    private void setDatesInputFieldsStyle() {
+        setTodayDate(dateInputAdd);
+        setTodayDate(dateInputChange);
+        setTodayDate(dateFrom);
+        setTodayDate(dateTo);
+    }
+
+    private void showAllTaleData() {
+        final List<Sales> sales = SalesManager.showAll();
+        if (sales.isEmpty()) {
+            showMessage(ERROR_NO_DATA);
+        } else {
+            showResults(sales);
+        }
+    }
+    private void showResults(final List<Sales> sales) {
+        table.getItems().clear();
+        table.getItems().addAll(sales);
+    }
+    private void initShowAllButton() {
+        showAllButton.setOnAction(actionEvent -> {
+            showAllTaleData();
+        });
+    }
+    private void initAddButton() {
+        addButton.setOnAction(actionEvent -> {
+            if (textFieldIsEmpty(warehouseNameInputAdd)) {
+                showMessage(ERROR_INPUT_NAME_EMPTY);
+            } else {
+                Timestamp dataAndTime = Timestamp.valueOf(getTimeAndDateInDataBaseFormat(dateInputAdd, hoursInput, minuteInput, secondsInput));
+                if (SalesManager.add(Integer.parseInt(quantityInputAdd.getText()), dataAndTime, warehouseNameInputAdd.getText())){
+                    showMessage(SUCCESSFULLY_ADDED);
+                    showAllTaleData();
+                } else {
+                    showMessage(ERROR_INPUT_WRONG_NAME);
+                }
+
+            }
+        });
+    }
+    private void initDeleteButton(){
+        deleteButton.setOnAction(actionEvent -> {
+           if (textFieldIsEmpty(warehouseNameInputAdd)) {
+               showMessage(ERROR_INPUT_NAME_EMPTY);
+           } else if (textFieldIsEmpty(quantityInputAdd)) {
+               showMessage(ERROR_INPUT_QUANTITY_EMPTY);
+           }
+           else {
+               Timestamp dataAndTime = Timestamp.valueOf(getTimeAndDateInDataBaseFormat(dateInputAdd, hoursInput, minuteInput, secondsInput));
+               List<Sales> sales = SalesManager.find(Integer.parseInt(quantityInputAdd.getText()),dataAndTime,warehouseNameInputAdd.getText());
+               if (sales.isEmpty()) {
+                   showMessage(ERROR_NO_DATA);
+               }
+               if(SalesManager.delete(Integer.parseInt(quantityInputAdd.getText()), dataAndTime, warehouseNameInputAdd.getText())) {
+                   showMessage(SUCCESSFULLY_DELETED);
+               }
+           }
+           showAllTaleData();
+        });
+    }
+    private void initFilterButton() {
+        filterByDateButton.setOnAction(actionEvent -> {
+            Timestamp timeFrom = Timestamp.valueOf(getDateAndChangeToDataBaseFormat(dateFrom) + " 00:00:00.000");
+            Timestamp timeTo = Timestamp.valueOf(getDateAndChangeToDataBaseFormat(dateTo) + " 23:59:59.000");
+            showResults(SalesManager.filterByDate(timeFrom, timeTo));
+        });
+    }
+    private void initShowButton() {
+        showInfoButton.setOnAction(actionEvent -> {
+            cleanDatePicker(dateFrom);
+            cleanDatePicker(dateTo);
+            if (textFieldIsEmpty(warehouseNameInputShowInfo) ) {
+                showMessage(ERROR_INPUT_NAME_EMPTY);
+            } else {
+                showResults(SalesManager.findByWarehouseName(warehouseNameInputShowInfo.getText()));
+            }
+
+        });
+    }
+    private void initChangeButton() {
+        changeButton.setOnAction(actionEvent -> {
+            Timestamp dateAndTime = Timestamp.valueOf(getTimeAndDateInDataBaseFormat(dateInputAdd, hoursInput, minuteInput, secondsInput));
+            Timestamp newDateAndTime = Timestamp.valueOf(getTimeAndDateInDataBaseFormat(dateInputChange, hoursInputChange, minuteInputChange, secondsInputChange));
+            if (textFieldIsEmpty(warehouseNameInputAdd)) {
+                showMessage(ERROR_INPUT_NAME_EMPTY);
+            } else if ( textFieldIsEmpty(quantityInputChange)) {
+                if (SalesManager.update(Integer.parseInt(quantityInputAdd.getText()), dateAndTime , warehouseNameInputAdd.getText(), Integer.parseInt(quantityInputAdd.getText()), newDateAndTime)) {
+                    showMessage(SUCCESSFULLY_CHANGED);
+                } else {
+                    showMessage(ERROR_NO_DATA);
+                }
+            }
+            else {
+                if (SalesManager.update(Integer.parseInt(quantityInputAdd.getText()), dateAndTime , warehouseNameInputAdd.getText(), Integer.parseInt(quantityInputChange.getText()), newDateAndTime)) {
+                    showMessage(SUCCESSFULLY_CHANGED);
+                } else {
+                    showMessage(ERROR_NO_DATA);
+                }
+            }
+            showAllTaleData();
+            cleanTextField(warehouseNameInputAdd);
+            cleanTextField(hoursInput);
+            cleanTextField(minuteInput);
+            cleanTextField(secondsInput);
+            cleanTextField(hoursInputChange);
+            cleanTextField(minuteInputChange);
+            cleanTextField(secondsInputChange);
+            cleanDatePicker(dateInputAdd);
+            cleanDatePicker(dateInputChange);
+        });
+
+    }
 
 
 }

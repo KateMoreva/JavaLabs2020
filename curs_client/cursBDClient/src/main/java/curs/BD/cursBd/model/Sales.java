@@ -46,6 +46,11 @@ public class Sales {
         this.saleDate = saleDate;
         this.warehousesId = warehousesId;
     }
+    public Sales(Integer quantity, Timestamp saleDate, Warehouses warehousesId) {
+        this.quantity = quantity;
+        this.saleDate = saleDate;
+        this.warehousesId = warehousesId;
+    }
 
     public Integer getId() {
         return id;
@@ -89,5 +94,8 @@ public class Sales {
     }
     public void setWarehousesId(Warehouses warehousesId) {
         this.warehousesId = warehousesId;
+    }
+    public String getWarehousesName() {
+        return this.warehousesId.getName();
     }
 }

@@ -15,9 +15,9 @@
       <TableView fx:id="table" layoutX="370.0" layoutY="15.0" prefHeight="478.0" prefWidth="422.0">
          <columns>
             <TableColumn fx:id="warehouseNameColumn" editable="false" prefWidth="90.0" text="Warehouse" />
-            <TableColumn fx:id="saleDateColumn" editable="false" minWidth="0.0" prefWidth="100.0" text="Sale date" />
-            <TableColumn fx:id="amountColumn" prefWidth="116.0" text="Amount" />
-            <TableColumn fx:id="quantityColumn" prefWidth="115.0" text="Quantity" />
+            <TableColumn fx:id="saleDateColumn" editable="false" minWidth="0.0" prefWidth="182.0" text="Sale date" />
+            <TableColumn fx:id="amountColumn" prefWidth="72.0" text="Amount" />
+            <TableColumn fx:id="quantityColumn" prefWidth="77.0" text="Quantity" />
          </columns>
       </TableView>
       <Button fx:id="showAllButton" layoutX="280.0" layoutY="63.0" mnemonicParsing="false" text="Show all" />
@@ -26,7 +26,7 @@
       <TextField fx:id="quantityInputAdd" layoutX="5.0" layoutY="206.0" prefHeight="26.0" prefWidth="82.0" promptText="quantity" />
       <TextArea fx:id="infoText" layoutX="6.0" layoutY="8.0" prefHeight="42.0" prefWidth="348.0" wrapText="true" />
       <TextField fx:id="warehouseNameInputAdd" layoutX="5.0" layoutY="164.0" prefHeight="26.0" prefWidth="131.0" promptText="warehouse name" />
-      <Button fx:id="filterButton" layoutX="277.0" layoutY="390.0" mnemonicParsing="false" text=" Change" />
+      <Button fx:id="changeButton" layoutX="277.0" layoutY="390.0" mnemonicParsing="false" text=" Change" />
       <TextField fx:id="quantityInputChange" layoutX="10.0" layoutY="350.0" prefHeight="26.0" prefWidth="116.0" promptText="new quantity" />
       <Button fx:id="showInfoButton" layoutX="239.0" layoutY="448.0" mnemonicParsing="false" text="Show all sales" />
       <TextField fx:id="warehouseNameInputShowInfo" layoutX="7.0" layoutY="449.0" prefHeight="26.0" prefWidth="131.0" promptText="warehouse name" />

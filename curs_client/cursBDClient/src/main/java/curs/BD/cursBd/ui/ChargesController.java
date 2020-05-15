@@ -114,7 +114,7 @@ public class ChargesController extends WindowController{
         initShowInfoButton();
         initChangeButton();
     }
-    private void initShawAllButton() {;
+    private void initShawAllButton() {
         showAllButton.setOnAction(actionEvent -> {
             showTableData();
         });
