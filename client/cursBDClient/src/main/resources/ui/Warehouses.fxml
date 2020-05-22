@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mainBg" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: #2E3348;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="curs.BD.cursBd.ui.WarehousesController">
+    <children>
+        <Button fx:id="showAllButton" layoutX="283.0" layoutY="66.0" mnemonicParsing="false" text="Show all" />
+        <Button fx:id="addButton" layoutX="312.0" layoutY="217.0" mnemonicParsing="false" text="Add" />
+        <Button fx:id="deleteButton" layoutX="295.0" layoutY="274.0" mnemonicParsing="false" text="Delete" />
+        <Button fx:id="changeQuantityButton" layoutX="228.0" layoutY="387.0" mnemonicParsing="false" text=" Change quantity" />
+        <Button fx:id="filterByQuantityButton" layoutX="231.0" layoutY="117.0" mnemonicParsing="false" text="filter by quantity" />
+        <TextField fx:id="nameInputAdd" layoutX="4.0" layoutY="220.0" prefHeight="26.0" prefWidth="116.0" promptText="name" />
+        <TextField fx:id="quantityInputAdd" layoutX="129.0" layoutY="219.0" prefHeight="26.0" prefWidth="82.0" promptText="quantity" />
+        <TextField fx:id="nameInputDelete" layoutX="4.0" layoutY="276.0" prefHeight="26.0" prefWidth="232.0" promptText="name" />
+        <TextField fx:id="nameInputChangeQuantity" layoutX="5.0" layoutY="388.0" prefHeight="26.0" prefWidth="123.0" promptText="name" />
+        <TextField fx:id="quantityInputChangeQuantity" layoutX="137.0" layoutY="388.0" prefHeight="26.0" prefWidth="82.0" promptText="quantity" />
+        <TextField fx:id="quantityFromFilterInput" layoutX="5.0" layoutY="117.0" prefHeight="26.0" prefWidth="82.0" promptText="100" />
+        <TextField fx:id="quantityToFilterInput" layoutX="121.0" layoutY="117.0" prefHeight="26.0" prefWidth="82.0" promptText="1000" />
+        <Button fx:id="showInfoButton" layoutX="228.0" layoutY="329.0" mnemonicParsing="false" text="Show information" />
+        <TextField fx:id="nameInputShowInfo" layoutX="5.0" layoutY="330.0" prefHeight="26.0" prefWidth="212.0" promptText="name" />
+        <TextArea fx:id="infoText" editable="false" layoutX="8.0" layoutY="9.0" prefHeight="42.0" prefWidth="348.0" wrapText="true" />
+      <Button fx:id="changeAmountButton" layoutX="231.0" layoutY="436.0" mnemonicParsing="false" text=" Change amount" />
+      <TextField fx:id="nameInputChangeAmount" layoutX="5.0" layoutY="438.0" prefHeight="26.0" prefWidth="123.0" promptText="name" />
+      <TextField fx:id="amountInputChangeAmount" layoutX="137.0" layoutY="438.0" prefHeight="26.0" prefWidth="82.0" promptText="amount" />
+      <TableView fx:id="table" layoutX="370.0" layoutY="15.0" prefHeight="478.0" prefWidth="422.0">
+         <columns>
+            <TableColumn fx:id="productNameColumn" editable="false" prefWidth="136.0" text="Name" />
+            <TableColumn fx:id="productQuantityColumn" editable="false" minWidth="0.0" prefWidth="141.0" text="Quantity" />
+            <TableColumn fx:id="productAmountColumn" editable="false" prefWidth="144.0" text="Amount" />
+         </columns>
+      </TableView>
+      <Button fx:id="filterByAmountButton" layoutX="234.0" layoutY="164.0" mnemonicParsing="false" text="filter by amount" />
+      <TextField fx:id="amountFromFilterInput" layoutX="5.0" layoutY="167.0" prefHeight="26.0" prefWidth="82.0" promptText="100" />
+      <TextField fx:id="amountToFilterInput" layoutX="121.0" layoutY="165.0" prefHeight="26.0" prefWidth="82.0" promptText="1000" />
+      <TextField fx:id="amountInputAdd" layoutX="220.0" layoutY="218.0" prefHeight="26.0" prefWidth="82.0" promptText="amount" />
+    </children>
+</AnchorPane>

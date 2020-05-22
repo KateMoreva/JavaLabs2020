@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #2E3348;" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+  <tabs>
+    <Tab text="Склад">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #2E3348;">
+               <children>
+                  <TableView layoutX="310.0" layoutY="34.0" prefHeight="319.0" prefWidth="282.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="C1" />
+                      <TableColumn prefWidth="75.0" text="C2" />
+                        <TableColumn prefWidth="75.0" text="Column X" />
+                    </columns>
+                  </TableView>
+                  <Button layoutX="214.0" layoutY="53.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="205.0" layoutY="108.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="205.0" layoutY="158.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="205.0" layoutY="208.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="236.0" layoutY="256.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="214.0" layoutY="302.0" mnemonicParsing="false" text="Button" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="Продажи">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <TableView layoutX="180.0" layoutY="9.0" prefHeight="350.0" prefWidth="371.0">
+                    <columns>
+                      <TableColumn prefWidth="95.0" text="Name" />
+                      <TableColumn prefWidth="60.0" text="Price" />
+                      <TableColumn prefWidth="78.0" text="Column X" />
+                      <TableColumn prefWidth="81.0" text="Column X" />
+                    </columns>
+                  </TableView>
+                  <Button layoutX="238.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="238.0" layoutY="72.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="238.0" layoutY="150.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="238.0" layoutY="207.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="231.0" layoutY="312.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="247.0" layoutY="266.0" mnemonicParsing="false" text="Button" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="Расходы">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="217.0" layoutY="44.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="217.0" layoutY="100.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="217.0" layoutY="144.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="217.0" layoutY="184.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="217.0" layoutY="243.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="217.0" layoutY="298.0" mnemonicParsing="false" text="Button" />
+                  <TableView layoutX="288.0" layoutY="57.0" prefHeight="200.0" prefWidth="297.0">
+                    <columns>
+                      <TableColumn prefWidth="107.0" text="C1" />
+                      <TableColumn prefWidth="89.0" text="C2" />
+                      <TableColumn prefWidth="100.0" text="Column X" />
+                    </columns>
+                  </TableView>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="Статьи расходов">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <TableView layoutX="360.0" layoutY="42.0" prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="C1" />
+                      <TableColumn prefWidth="75.0" text="C2" />
+                    </columns>
+                  </TableView>
+                  <Button layoutX="259.0" layoutY="29.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="259.0" layoutY="78.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="259.0" layoutY="129.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="259.0" layoutY="184.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="259.0" layoutY="242.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="249.0" layoutY="298.0" mnemonicParsing="false" text="Button" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
