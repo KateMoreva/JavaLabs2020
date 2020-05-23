@@ -2,7 +2,6 @@ package curs.BD.cursBd.controllers;
 
 import curs.BD.cursBd.model.Charges;
 import curs.BD.cursBd.model.ExpenseItems;
-import curs.BD.cursBd.model.Product;
 import curs.BD.cursBd.repositories.ChargesRepository;
 import curs.BD.cursBd.repositories.ExpenseItemsRepository;
 import curs.BD.cursBd.exceptions.ResourceNotFoundException;
@@ -102,7 +101,7 @@ public class ExpenseItemsController {
             }
         }
         expenseItemsRepository.delete(expenseItems);
-        return new ResponseEntity<Product>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(value = "/no-such/name/{name}", method = RequestMethod.DELETE)
@@ -120,7 +119,7 @@ public class ExpenseItemsController {
                 expenseItemsRepository.delete(expenseItem);
             }
         }
-        return new ResponseEntity<Product>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
